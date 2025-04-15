@@ -6,7 +6,7 @@ networks:
 
 services:
   llm-dataset-build:
-    image: llm-dataset-build:1.0.0
+    image: llm-dataset-build:1.2.5
     container_name: llm-dataset-build
     restart: always
     ports:
