@@ -1,0 +1,21 @@
+version: '3'
+
+networks:
+  llm-net:
+    driver: bridge
+
+services:
+  llm-dataset-build:
+    image: llm-dataset-build:1.0.0
+    container_name: llm-dataset-build
+    restart: always
+    ports:
+      - "8787:1717"
+    volumes:
+      # 数据挂载
+      - ./volumes/llmdataset/data/:/app/local-db/
+    privileged: true
+    networks:
+      - llm-net
+
+

@@ -1,0 +1,120 @@
+[
+  {
+    "id": "default-1",
+    "provider": "Ollama",
+    "providerId": "ollama",
+    "endpoint": "http://127.0.0.1:11434/api",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-2",
+    "provider": "OpenAI",
+    "providerId": "openai",
+    "name": "gpt-4o",
+    "endpoint": "https://api.openai.com/v1/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-3",
+    "provider": "硅基流动",
+    "providerId": "siliconflow",
+    "name": "deepseek-ai/DeepSeek-R1",
+    "endpoint": "https://api.siliconflow.cn/v1/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-4",
+    "provider": "DeepSeek",
+    "providerId": "deepseek",
+    "name": "deepseek-chat",
+    "endpoint": "https://api.deepseek.com/v1/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-5",
+    "provider": "302.AI",
+    "providerId": "302ai",
+    "name": "Doubao-pro-128k",
+    "endpoint": "https://api.302.ai/v1/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-6",
+    "provider": "智谱AI",
+    "providerId": "zhipu",
+    "name": "glm-4-flash",
+    "endpoint": "https://open.bigmodel.cn/api/paas/v4/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-7",
+    "provider": "火山引擎",
+    "providerId": "huoshan",
+    "endpoint": "https://ark.cn-beijing.volces.com/api/v3/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-8",
+    "provider": "Groq",
+    "providerId": "groq",
+    "name": "Gemma 7B",
+    "endpoint": "https://api.groq.com/openai",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-9",
+    "provider": "Grok",
+    "providerId": "grok",
+    "name": "Grok Beta",
+    "endpoint": "https://api.x.ai",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-10",
+    "provider": "OpenRouter",
+    "providerId": "OpenRouter",
+    "name": "google/gemma-2-9b-it:free",
+    "endpoint": "https://openrouter.ai/api/v1/",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "default-11",
+    "provider": "阿里云百炼",
+    "providerId": "alibailian",
+    "name": "qwen-max-latest",
+    "endpoint": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "apiKey": "",
+    "temperature": 0.7,
+    "maxTokens": 8192
+  },
+  {
+    "id": "model-1744705347879",
+    "provider": "DeepSeek",
+    "providerId": "deepseek",
+    "endpoint": "http://182.150.53.174:8199/v1/",
+    "apiKey": "gpustack_d1308e39e26b78be_37076c7428b692d2b0bf414b857973b2",
+    "temperature": 0.4,
+    "maxTokens": 8192,
+    "name": "deepseek-r1"
+  }
+]
