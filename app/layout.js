@@ -7,7 +7,7 @@ export const metadata = {
   title: SERVER_CONFIG.name,
   description: SERVER_CONFIG.description,
   icons: {
-    icon: '/imgs/logo.ico' // 更新为正确的文件名
+    icon: '/imgs/llm-logo.ico' // 更新为正确的文件名
   }
 };
 

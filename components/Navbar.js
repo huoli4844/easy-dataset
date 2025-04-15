@@ -31,6 +31,7 @@ import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import StorageIcon from '@mui/icons-material/Storage';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import { SERVER_CONFIG } from '@/constant/server-config';
 
 export default function Navbar({ projects = [], currentProject, models = [] }) {
   const [selectedProject, setSelectedProject] = useState(currentProject || '');
@@ -118,7 +119,7 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
               className={theme.palette.mode === 'dark' ? 'gradient-text' : ''}
               color={theme.palette.mode === 'dark' ? 'inherit' : 'white'}
             >
-              LLM Dataset Build
+                {SERVER_CONFIG.name + ' ' + SERVER_CONFIG.version}
             </Typography>
           </Box>
 

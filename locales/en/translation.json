@@ -130,8 +130,8 @@
     "copied": "Copied"
   },
   "home": {
-    "title": "LLM Dataset",
-    "subtitle": "A powerful tool for creating fine-tuning datasets for Large Language Models",
+    "title": "LLM Dataset Build",
+    "subtitle": "A powerful large language model fine-tuning dataset creation tool developed by Chengdu Shidai Yuchen.",
     "createProject": "Create Project",
     "searchDataset": "Search Public Datasets"
   },

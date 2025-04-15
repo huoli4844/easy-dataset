@@ -130,8 +130,8 @@
     "copied": "已复制"
   },
   "home": {
-    "title": "LLM Dataset",
-    "subtitle": "一个强大的大型语言模型微调数据集创建工具",
+    "title": "LLM Dataset Build",
+    "subtitle": "成都时代宇辰开发的一个强大的大型语言模型微调数据集创建工具",
     "createProject": "创建项目",
     "searchDataset": "搜索公开数据集"
   },
