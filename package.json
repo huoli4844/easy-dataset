@@ -22,7 +22,7 @@
     "electron-build-mac": "pnpm clean-dist && next build && electron-builder --mac",
     "electron-build-win": "pnpm clean-dist && next build && electron-builder --win",
     "electron-build-linux": "pnpm clean-dist && next build && electron-builder --linux",
-    "docker": "docker build -t easy-dataset ."
+    "docker": "docker build -t llm-dataset-build:1.2.5 ."
   },
   "bin": "desktop/server.js",
   "pkg": {

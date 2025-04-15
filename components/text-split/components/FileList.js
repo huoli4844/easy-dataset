@@ -114,10 +114,10 @@ export default function FileList({ theme, files = [], loading = false, onDeleteF
             <Box key={index}>
               <ListItem
                 secondaryAction={
-                  <Box sx={{ display: 'flex' }}>
+                  <Box sx={{ display: 'flex', minWidth: 'fit-content' }}>
                     <Checkbox
-                      sx={{ mr: 1 }} // 添加一些右边距，使复选框和按钮之间有间隔
-                      checked={file.checked} // 假设 `file.checked` 是复选框的状态
+                      sx={{ mr: 1 }}
+                      checked={file.checked}
                       onChange={e => handleCheckboxChange(file.name, e.target.checked)}
                     />
                     <Tooltip title={t('textSplit.viewDetails')}>
@@ -143,12 +143,26 @@ export default function FileList({ theme, files = [], loading = false, onDeleteF
                     </Tooltip>
                   </Box>
                 }
+                sx={{ pr: '160px' }} // 为右侧按钮预留空间
               >
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <FileIcon color="primary" sx={{ mr: 1 }} />
+                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
+                  <FileIcon color="primary" sx={{ mr: 1, flexShrink: 0 }} />
                   <ListItemText
                     primary={file.name}
                     secondary={`${(file.size / 1024 / 1024).toFixed(2)} MB · ${new Date(file.createdAt).toLocaleString()}`}
+                    sx={{
+                      overflow: 'hidden',
+                      '& .MuiListItemText-primary': {
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      },
+                      '& .MuiListItemText-secondary': {
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap'
+                      }
+                    }}
                   />
                 </Box>
               </ListItem>

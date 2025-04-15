@@ -64,19 +64,31 @@ export default function UploadArea({ theme, files, uploading, uploadedFiles, onF
             {files.map((file, index) => (
               <Box key={index}>
                 <ListItem
-                  secondaryAction={
-                    <Button
-                      size="small"
-                      color="error"
-                      startIcon={<DeleteIcon />}
-                      onClick={() => onRemoveFile(index)}
-                      disabled={uploading}
-                    >
-                      {t('common.delete')}
-                    </Button>
-                  }
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    py: 1.5
+                  }}
                 >
-                  <ListItemText primary={file.name} secondary={`${(file.size / 1024).toFixed(2)} KB`} />
+                  <Box sx={{ flex: 1, minWidth: 0, mr: 2 }}>
+                    <ListItemText 
+                      primary={file.name} 
+                      secondary={`${(file.size / 1024).toFixed(2)} KB`}
+                      primaryTypographyProps={{ noWrap: true }}
+                      secondaryTypographyProps={{ noWrap: true }}
+                    />
+                  </Box>
+                  <Button
+                    size="small"
+                    color="error"
+                    startIcon={<DeleteIcon />}
+                    onClick={() => onRemoveFile(index)}
+                    disabled={uploading}
+                    sx={{ minWidth: 'auto' }}
+                  >
+                    {t('common.delete')}
+                  </Button>
                 </ListItem>
                 {index < files.length - 1 && <Divider />}
               </Box>
