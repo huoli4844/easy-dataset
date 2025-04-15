@@ -83,9 +83,9 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
       }}
       style={{ borderRadius: 0, zIndex: 99000 }}
     >
-      <Toolbar sx={{ minHeight: '64px' }} style={{ zIndex: 99000 }}>
+      <Toolbar sx={{ minHeight: '64px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} style={{ zIndex: 99000 }}>
         {/* 左侧Logo和项目选择 */}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexGrow: 0 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
           <Box
             sx={{
               display: 'flex',
@@ -170,8 +170,13 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
         {/* 中间的功能模块导航 */}
         {isProjectDetail && (
           <Box
-            sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}
-            style={{ position: 'absolute', left: '400px' }}
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexGrow: 1,
+              mx: 2,
+              overflow: 'auto'
+            }}
           >
             <Tabs
               value={pathname}
@@ -235,8 +240,13 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
 
         {/* 右侧操作区 */}
         <Box
-          sx={{ display: 'flex', flexGrow: 0, alignItems: 'center', gap: 2 }}
-          style={{ position: 'absolute', right: '20px' }}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            flexShrink: 0,
+            ml: 2
+          }}
         >
           {/* 模型选择 */}
           {location.pathname.includes('/projects/') && (
