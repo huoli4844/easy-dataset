@@ -1,6 +1,6 @@
 appId: com.easydataset.app
-productName: Easy Dataset
-copyright: Copyright 2025 Easy Dataset
+productName: ${productName}
+copyright: Copyright 2025 ${productName}
 description: A application for creating large model fine-tuning datasets
 
 directories:
@@ -53,7 +53,7 @@ win:
 
 # 添加 Linux 配置
 linux:
-    icon: public/imgs/logo.png
+    icon: public/imgs/llm-logo.png
     target: [AppImage, deb]
     category: Development
     maintainer: '1009903985@qq.com'

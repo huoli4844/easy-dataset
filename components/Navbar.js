@@ -99,8 +99,8 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
           >
             <Box
               component="img"
-              src="/imgs/logo.svg"
-              alt="Easy Dataset Logo"
+              src="/imgs/llm-logo.svg"
+              alt="LLM Dataset Build Logo"
               sx={{
                 width: 28,
                 height: 28,
@@ -118,7 +118,7 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
               className={theme.palette.mode === 'dark' ? 'gradient-text' : ''}
               color={theme.palette.mode === 'dark' ? 'inherit' : 'white'}
             >
-              Easy DataSet
+              LLM Dataset Build
             </Typography>
           </Box>
 
@@ -290,7 +290,7 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
           </Tooltip>
 
           {/* GitHub链接 */}
-          <Tooltip title={t('common.visitGitHub')}>
+          {/* <Tooltip title={t('common.visitGitHub')}>
             <IconButton
               onClick={() => window.open('https://github.com/ConardLi/easy-dataset', '_blank')}
               size="small"
@@ -306,7 +306,7 @@ export default function Navbar({ projects = [], currentProject, models = [] }) {
             >
               <GitHubIcon fontSize="small" />
             </IconButton>
-          </Tooltip>
+          </Tooltip> */}
 
           {/* 更新检查器 */}
           <UpdateChecker />

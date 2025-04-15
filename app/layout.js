@@ -1,10 +1,11 @@
 import './globals.css';
 import ThemeRegistry from '@/components/ThemeRegistry';
 import I18nProvider from '@/components/I18nProvider';
+import { SERVER_CONFIG } from '@/constant/server-config';
 
 export const metadata = {
-  title: 'Easy Dataset',
-  description: '一个强大的 LLM 数据集生成工具',
+  title: SERVER_CONFIG.name,
+  description: SERVER_CONFIG.description,
   icons: {
     icon: '/imgs/logo.ico' // 更新为正确的文件名
   }

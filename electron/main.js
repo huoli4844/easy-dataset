@@ -57,7 +57,7 @@ function createWindow() {
   });
 
   // 设置窗口标题
-  mainWindow.setTitle(`Easy Dataset v${getAppVersion()}`);
+  mainWindow.setTitle(`LLM Dataset Build v${getAppVersion()}`);
   const loadingPath = url.format({
     pathname: path.join(__dirname, 'loading.html'),
     protocol: 'file:',
@@ -182,19 +182,20 @@ function createMenu() {
           label: '关于',
           click: () => {
             dialog.showMessageBox(mainWindow, {
-              title: '关于 Easy Dataset',
-              message: `Easy Dataset v${getAppVersion()}`,
+              title: '关于 LLM Dataset Build',
+              message: `LLM Dataset Build v${getAppVersion()}`,
               detail: '一个用于创建大模型微调数据集的应用程序。',
               buttons: ['确定']
             });
           }
-        },
-        {
-          label: '访问 GitHub',
-          click: () => {
-            shell.openExternal('https://github.com/ConardLi/easy-dataset');
-          }
         }
+        // ,
+        // {
+        //   label: '访问 GitHub',
+        //   click: () => {
+        //     shell.openExternal('https://github.com/ConardLi/easy-dataset');
+        //   }
+        // }
       ]
     }
   ];
@@ -205,7 +206,7 @@ function createMenu() {
 
 // 启动 Next.js 服务
 async function startNextServer() {
-  console.log(`Easy Dataset 客户端启动中，当前版本: ${getAppVersion()}`);
+  console.log(`LLM Dataset Build 客户端启动中，当前版本: ${getAppVersion()}`);
 
   // 检查端口是否被占用
   const isPortBusy = await checkPort(port);

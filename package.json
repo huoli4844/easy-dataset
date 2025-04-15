@@ -50,7 +50,6 @@
     "@mui/icons-material": "5.16.14",
     "@mui/lab": "5.0.0-alpha.175",
     "@mui/material": "5.16.14",
-    "@opendocsg/pdf2md": "^0.2.1",
     "@openrouter/ai-sdk-provider": "^0.4.5",
     "adm-zip": "^0.5.16",
     "ai": "^4.3.4",
@@ -64,7 +63,6 @@
     "next-themes": "^0.2.1",
     "ollama-ai-provider": "^1.2.0",
     "opener": "^1.5.2",
-    "pdf2md-js": "^1.0.1",
     "pdfjs-dist": "^3.11.174",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -85,11 +83,12 @@
     "pkg": "^5.8.1",
     "wait-on": "^7.2.0"
   },
+  "overrides": {},
   "main": "electron/main.js",
   "description": "一个用于创建大模型微调数据集的应用程序",
   "build": {
     "appId": "com.easydataset.app",
-    "productName": "Easy Dataset",
+    "productName": "${APP_CONFIG.name}",
     "files": [
       ".next/**/*",
       "!.next/cache/**/*",
