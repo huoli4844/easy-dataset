@@ -44,7 +44,7 @@ let nextApp;
 // 创建主窗口
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1400,
     height: 800,
     show: false,
     frame: true,

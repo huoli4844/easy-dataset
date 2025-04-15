@@ -46,7 +46,7 @@ mac:
 
 # 添加 Windows 配置
 win:
-    icon: public/imgs/logo.ico
+    icon: public/imgs/llm-logo.ico
     target:
         - target: nsis
           arch: [x64]

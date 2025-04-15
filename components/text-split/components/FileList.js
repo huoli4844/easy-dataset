@@ -112,40 +112,8 @@ export default function FileList({ theme, files = [], loading = false, onDeleteF
         <List sx={{ maxHeight: '220px', overflow: 'auto', width: '100%' }}>
           {files.map((file, index) => (
             <Box key={index}>
-              <ListItem
-                secondaryAction={
-                  <Box sx={{ display: 'flex', minWidth: 'fit-content' }}>
-                    <Checkbox
-                      sx={{ mr: 1 }}
-                      checked={file.checked}
-                      onChange={e => handleCheckboxChange(file.name, e.target.checked)}
-                    />
-                    <Tooltip title={t('textSplit.viewDetails')}>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleViewContent(file.name)}
-                      >
-                        <VisibilityIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title={t('textSplit.download')}>
-                      <IconButton
-                        color="primary"
-                        onClick={() => handleDownload(file.name)}
-                      >
-                        <Download />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="删除文献">
-                      <IconButton color="error" onClick={() => onDeleteFile(file.name)}>
-                        <DeleteIcon />
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                }
-                sx={{ pr: '160px' }} // 为右侧按钮预留空间
-              >
-                <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', overflow: 'hidden' }}>
+              <ListItem sx={{ flexDirection: 'column', alignItems: 'stretch', py: 2 }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                   <FileIcon color="primary" sx={{ mr: 1, flexShrink: 0 }} />
                   <ListItemText
                     primary={file.name}
@@ -164,6 +132,33 @@ export default function FileList({ theme, files = [], loading = false, onDeleteF
                       }
                     }}
                   />
+                </Box>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Checkbox
+                    checked={file.checked}
+                    onChange={e => handleCheckboxChange(file.name, e.target.checked)}
+                  />
+                  <Tooltip title={t('textSplit.viewDetails')}>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleViewContent(file.name)}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t('textSplit.download')}>
+                    <IconButton
+                      color="primary"
+                      onClick={() => handleDownload(file.name)}
+                    >
+                      <Download />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="删除文献">
+                    <IconButton color="error" onClick={() => onDeleteFile(file.name)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </ListItem>
               {index < files.length - 1 && <Divider />}

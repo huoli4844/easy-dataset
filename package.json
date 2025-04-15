@@ -127,7 +127,7 @@
       ]
     },
     "win": {
-      "icon": "public/imgs/logo.ico",
+      "icon": "public/imgs/llm-logo.ico",
       "target": [
         {
           "target": "nsis",
