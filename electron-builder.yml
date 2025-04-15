@@ -1,6 +1,6 @@
 appId: com.easydataset.app
-productName: ${productName}
-copyright: Copyright 2025 ${productName}
+productName: LLM Dataset
+copyright: Copyright 2025 LLM Dataset
 description: A application for creating large model fine-tuning datasets
 
 directories:

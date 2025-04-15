@@ -88,7 +88,7 @@
   "description": "一个用于创建大模型微调数据集的应用程序",
   "build": {
     "appId": "com.easydataset.app",
-    "productName": "${APP_CONFIG.name}",
+    "productName": "LLM Dataset",
     "files": [
       ".next/**/*",
       "!.next/cache/**/*",
