@@ -344,6 +344,8 @@
     "fetchFailed": "获取数据集失败",
     "deleteFailed": "删除数据集失败",
     "deleteSuccess": "删除成功",
+    "confrimFailed": "确认数据集失败",
+    "confrimSuccess": "确认成功",
     "exportSuccess": "数据集导出成功",
     "exportFailed": "导出失败",
     "loading": "加载数据集...",
