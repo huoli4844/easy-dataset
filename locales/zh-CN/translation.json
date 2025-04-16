@@ -355,7 +355,7 @@
     "batchDeleteCount": "已生成: {{count}}",
     "batchConfrim": "批量确认",
     "batchConfrimProgress": "已完成: {{completed}}/{{total}}",
-    "batchConfrimCount": "已生成: {{count}}",
+    "batchConfrimCount": "已确认: {{count}}",
     "searchPlaceholder": "搜索数据集...",
     "viewDetails": "查看详情",
     "datasetDetail": "数据集详情",

@@ -564,7 +564,36 @@ export default function DatasetsPage({ params }) {
 
   //批量确认
   const handleBatchConfrimDataset = async () => {
-   
+    try {
+      // 批量确认选中的数据集
+      await Promise.all(
+        selectedIds.map(async datasetId => {
+          const response = await fetch(`/api/projects/${projectId}/datasets?id=${datasetId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ confirmed: true })
+          });
+          if (!response.ok) throw new Error(t('datasets.confrimFailed'));
+        })
+      );
+
+      setSnackbar({
+        open: true,
+        message: t('datasets.batchConfrimCount', { count: selectedIds.length }),
+        severity: 'success'
+      });
+      
+      // 刷新数据
+      fetchDatasets();
+    } catch (error) {
+      setSnackbar({
+        open: true,
+        message: error.message || t('datasets.confrimFailed'),
+        severity: 'error'
+      });
+    }
   };
 
   const resetProgress = () => {

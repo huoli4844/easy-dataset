@@ -344,6 +344,8 @@
     "fetchFailed": "Failed to fetch dataset",
     "deleteFailed": "Failed to delete dataset",
     "deleteSuccess": "Delete successful",
+    "confrimFailed": "Confrim failed",
+    "confrimSuccess": "Confrim successful",
     "exportSuccess": "Dataset exported successfully",
     "exportFailed": "Export failed",
     "loading": "Loading datasets...",
