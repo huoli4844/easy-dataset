@@ -33,6 +33,7 @@ import {
   LinearProgress
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ChecklistRtl from '@mui/icons-material/ChecklistRtl';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
@@ -551,6 +552,7 @@ export default function DatasetsPage({ params }) {
     });
   };
 
+  // 批量删除
   const handleBatchDeleteDataset = async () => {
     setDeleteDialog({
       open: true,
@@ -558,6 +560,11 @@ export default function DatasetsPage({ params }) {
       batch: true,
       count: selectedIds.length
     });
+  };
+
+  //批量确认
+  const handleBatchConfrimDataset = async () => {
+   
   };
 
   const resetProgress = () => {
@@ -899,6 +906,15 @@ export default function DatasetsPage({ params }) {
               count: selectedIds.length
             })}
           </Typography>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+          <Button
+            variant="outlined"
+            color="info"
+            startIcon={<ChecklistRtl />}
+            sx={{ borderRadius: 2 }}
+            onClick={handleBatchConfrimDataset}>
+            {t('datasets.batchConfrim')}
+          </Button>
           <Button
             variant="outlined"
             color="error"
@@ -907,6 +923,7 @@ export default function DatasetsPage({ params }) {
             onClick={handleBatchDeleteDataset}>
             {t('datasets.batchDelete')}
           </Button>
+          </Box>
         </Box>
       ) : (
         ''
