@@ -1,5 +1,5 @@
 // LocalExportTab.js 组件
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -19,7 +19,14 @@ import {
   TableHead,
   TableBody,
   TableCell,
-  TableContainer
+  TableContainer,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Chip,
+  Alert,
+  CircularProgress
 } from '@mui/material';
 
 const LocalExportTab = ({
@@ -41,10 +48,120 @@ const LocalExportTab = ({
   handleIncludeChunkChange,
   handleAlpacaFieldTypeChange,
   handleCustomInstructionChange,
-  handleExport
+  handleExport,
+  projectId
 }) => {
   const theme = useTheme();
   const { t } = useTranslation();
+  
+  // 平衡导出相关状态
+  const [balanceDialogOpen, setBalanceDialogOpen] = useState(false);
+  const [tagStats, setTagStats] = useState([]);
+  const [balanceConfig, setBalanceConfig] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [totalCount, setTotalCount] = useState(0);
+
+  // 获取标签统计信息
+  const fetchTagStats = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/projects/${projectId}/datasets/export`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ confirmed: confirmedOnly })
+      });
+
+      if (!response.ok) {
+        throw new Error('获取标签统计失败');
+      }
+
+      const stats = await response.json();
+      setTagStats(stats);
+      
+      // 初始化平衡配置
+      const initialConfig = stats.map(stat => ({
+        tagLabel: stat.tagLabel,
+        maxCount: Math.min(stat.datasetCount, 100), // 默认最多100条
+        availableCount: stat.datasetCount
+      }));
+      
+      setBalanceConfig(initialConfig);
+      
+      // 计算总数
+      const total = initialConfig.reduce((sum, config) => sum + config.maxCount, 0);
+      setTotalCount(total);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 打开平衡导出对话框
+  const handleOpenBalanceDialog = () => {
+    setBalanceDialogOpen(true);
+    fetchTagStats();
+  };
+
+  // 更新单个标签的数量配置
+  const updateBalanceConfig = (tagLabel, newCount) => {
+    const newConfig = balanceConfig.map(config => {
+      if (config.tagLabel === tagLabel) {
+        const count = Math.min(Math.max(0, parseInt(newCount) || 0), config.availableCount);
+        return { ...config, maxCount: count };
+      }
+      return config;
+    });
+    
+    setBalanceConfig(newConfig);
+    
+    // 重新计算总数
+    const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
+    setTotalCount(total);
+  };
+
+  // 一键设置所有标签为相同数量
+  const setAllToSameCount = (count) => {
+    const newConfig = balanceConfig.map(config => ({
+      ...config,
+      maxCount: Math.min(Math.max(0, parseInt(count) || 0), config.availableCount)
+    }));
+    
+    setBalanceConfig(newConfig);
+    
+    const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
+    setTotalCount(total);
+  };
+
+  // 处理平衡导出
+  const handleBalancedExport = () => {
+    // 过滤出数量大于0的配置
+    const validConfig = balanceConfig.filter(config => config.maxCount > 0);
+    
+    if (validConfig.length === 0) {
+      setError('请至少为一个标签设置大于0的数量');
+      return;
+    }
+
+    // 调用原有的导出函数，但传递平衡配置
+    handleExport({
+      balanceMode: true,
+      balanceConfig: validConfig,
+      formatType,
+      systemPrompt,
+      confirmedOnly,
+      fileFormat,
+      includeCOT,
+      alpacaFieldType,
+      customInstruction,
+      customFields: formatType === 'custom' ? customFields : undefined
+    });
+    
+    setBalanceDialogOpen(false);
+  };
 
   // 自定义格式的示例
   const getCustomFormatExample = () => {
@@ -409,11 +526,143 @@ const LocalExportTab = ({
         />
       </Box>
 
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
+        <Button onClick={handleOpenBalanceDialog} variant="outlined" sx={{ borderRadius: 2 }}>
+          {t('export.balancedExport', '平衡导出')}
+        </Button>
         <Button onClick={handleExport} variant="contained" sx={{ borderRadius: 2 }}>
           {t('export.confirmExport')}
         </Button>
       </Box>
+
+      {/* 平衡导出对话框 */}
+      <Dialog
+        open={balanceDialogOpen}
+        onClose={() => setBalanceDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2
+          }
+        }}
+      >
+        <DialogTitle>
+          {t('export.balancedExport.title', '平衡导出设置')}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
+            {t('export.balancedExport.description', '根据领域标签配置每个类别的数据量，实现数据集的平衡导出')}
+          </Typography>
+
+          {error && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {error}
+            </Alert>
+          )}
+
+          {loading ? (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              {/* 批量设置 */}
+              <Box sx={{ mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
+                <Typography variant="subtitle2" gutterBottom>
+                  快速设置
+                </Typography>
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                  <Button size="small" onClick={() => setAllToSameCount(50)}>
+                    全部设为50
+                  </Button>
+                  <Button size="small" onClick={() => setAllToSameCount(100)}>
+                    全部设为100
+                  </Button>
+                  <Button size="small" onClick={() => setAllToSameCount(200)}>
+                    全部设为200
+                  </Button>
+                  <TextField
+                    size="small"
+                    type="number"
+                    placeholder="自定义数量"
+                    sx={{ width: 120 }}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        setAllToSameCount(e.target.value);
+                        e.target.value = '';
+                      }
+                    }}
+                  />
+                </Box>
+              </Box>
+
+              {/* 标签配置表格 */}
+              <TableContainer component={Paper}>
+                <Table size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>标签名称</TableCell>
+                      <TableCell align="right">可用数量</TableCell>
+                      <TableCell align="right">导出数量</TableCell>
+                      <TableCell align="right">设置</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {balanceConfig.map((config) => (
+                      <TableRow key={config.tagLabel}>
+                        <TableCell>
+                          <Chip label={config.tagLabel} size="small" variant="outlined" />
+                        </TableCell>
+                        <TableCell align="right">
+                          {config.availableCount}
+                        </TableCell>
+                        <TableCell align="right">
+                          <strong>{config.maxCount}</strong>
+                        </TableCell>
+                        <TableCell align="right">
+                          <TextField
+                            size="small"
+                            type="number"
+                            value={config.maxCount}
+                            onChange={(e) => updateBalanceConfig(config.tagLabel, e.target.value)}
+                            inputProps={{
+                              min: 0,
+                              max: config.availableCount,
+                              style: { textAlign: 'right' }
+                            }}
+                            sx={{ width: 80 }}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {/* 统计信息 */}
+              <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
+                <Typography variant="body2">
+                  <strong>总导出数量: {totalCount}</strong> | 
+                  标签数量: {balanceConfig.filter(c => c.maxCount > 0).length} / {balanceConfig.length}
+                </Typography>
+              </Box>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setBalanceDialogOpen(false)}>
+            {t('common.cancel', '取消')}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleBalancedExport}
+            disabled={loading || totalCount === 0}
+          >
+            {t('export.export', '导出')} ({totalCount})
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
