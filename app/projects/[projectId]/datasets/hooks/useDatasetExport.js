@@ -12,21 +12,21 @@ const useDatasetExport = projectId => {
     try {
       let apiUrl = `/api/projects/${projectId}/datasets/export`;
       const params = [];
-      
+
       if (exportOptions.confirmedOnly) {
         params.push(`status=confirmed`);
       }
-      
+
       // 检查是否是平衡导出模式
       if (exportOptions.balanceMode && exportOptions.balanceConfig) {
         params.push(`balanceMode=true`);
         params.push(`balanceConfig=${encodeURIComponent(JSON.stringify(exportOptions.balanceConfig))}`);
       }
-      
+
       if (params.length > 0) {
         apiUrl += `?${params.join('&')}`;
       }
-      
+
       const response = await axios.get(apiUrl);
       let dataToExport = response.data;
 
@@ -174,7 +174,7 @@ const useDatasetExport = projectId => {
   };
 
   // 导出平衡数据集
-  const exportBalancedDataset = async (exportOptions) => {
+  const exportBalancedDataset = async exportOptions => {
     const balancedOptions = {
       ...exportOptions,
       balanceMode: true,

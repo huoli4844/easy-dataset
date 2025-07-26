@@ -53,7 +53,7 @@ const LocalExportTab = ({
 }) => {
   const theme = useTheme();
   const { t } = useTranslation();
-  
+
   // 平衡导出相关状态
   const [balanceDialogOpen, setBalanceDialogOpen] = useState(false);
   const [tagStats, setTagStats] = useState([]);
@@ -69,27 +69,27 @@ const LocalExportTab = ({
       const response = await fetch(`/api/projects/${projectId}/datasets/export`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ confirmed: confirmedOnly })
       });
 
       if (!response.ok) {
-        throw new Error('获取标签统计失败');
+        throw new Error(t('errors.getTagStatsFailed'));
       }
 
       const stats = await response.json();
       setTagStats(stats);
-      
+
       // 初始化平衡配置
       const initialConfig = stats.map(stat => ({
         tagLabel: stat.tagLabel,
         maxCount: Math.min(stat.datasetCount, 100), // 默认最多100条
         availableCount: stat.datasetCount
       }));
-      
+
       setBalanceConfig(initialConfig);
-      
+
       // 计算总数
       const total = initialConfig.reduce((sum, config) => sum + config.maxCount, 0);
       setTotalCount(total);
@@ -115,23 +115,23 @@ const LocalExportTab = ({
       }
       return config;
     });
-    
+
     setBalanceConfig(newConfig);
-    
+
     // 重新计算总数
     const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
     setTotalCount(total);
   };
 
   // 一键设置所有标签为相同数量
-  const setAllToSameCount = (count) => {
+  const setAllToSameCount = count => {
     const newConfig = balanceConfig.map(config => ({
       ...config,
       maxCount: Math.min(Math.max(0, parseInt(count) || 0), config.availableCount)
     }));
-    
+
     setBalanceConfig(newConfig);
-    
+
     const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
     setTotalCount(total);
   };
@@ -140,9 +140,9 @@ const LocalExportTab = ({
   const handleBalancedExport = () => {
     // 过滤出数量大于0的配置
     const validConfig = balanceConfig.filter(config => config.maxCount > 0);
-    
+
     if (validConfig.length === 0) {
-      setError('请至少为一个标签设置大于0的数量');
+      setError(t('export.balancedExport.atLeastOneTag', '请至少为一个标签设置大于0的数量'));
       return;
     }
 
@@ -159,7 +159,7 @@ const LocalExportTab = ({
       customInstruction,
       customFields: formatType === 'custom' ? customFields : undefined
     });
-    
+
     setBalanceDialogOpen(false);
   };
 
@@ -167,21 +167,21 @@ const LocalExportTab = ({
   const getCustomFormatExample = () => {
     const { questionField, answerField, cotField, includeLabels, includeChunk } = customFields;
     const example = {
-      [questionField]: '问题内容',
-      [answerField]: '答案内容'
+      [questionField]: t('sampleData.questionContent'),
+      [answerField]: t('sampleData.answerContent')
     };
 
     // 如果包含思维链字段，添加到示例中
     if (includeCOT) {
-      example[cotField] = '思维链过程内容';
+      example[cotField] = t('sampleData.cotContent');
     }
 
     if (includeLabels) {
-      example.labels = ['领域标签1'];
+      example.labels = [t('sampleData.domainLabel')];
     }
 
     if (includeChunk) {
-      example.chunk = '文本块';
+      example.chunk = t('sampleData.textChunk');
     }
 
     return fileFormat === 'json' ? JSON.stringify([example], null, 2) : JSON.stringify(example);
@@ -266,12 +266,12 @@ const LocalExportTab = ({
       if (customFields.includeChunk) headers.push('chunkId');
 
       const row = {
-        [customFields.questionField]: '问题内容',
-        [customFields.answerField]: '答案内容'
+        [customFields.questionField]: t('sampleData.questionContent'),
+        [customFields.answerField]: t('sampleData.answerContent')
       };
-      if (includeCOT) row[customFields.cotField] = '思维链过程内容';
-      if (customFields.includeLabels) row.labels = '领域标签';
-      if (customFields.includeChunk) row.chunkId = '文本块';
+      if (includeCOT) row[customFields.cotField] = t('sampleData.cotContent');
+      if (customFields.includeLabels) row.labels = t('sampleData.domainLabel');
+      if (customFields.includeChunk) row.chunkId = t('sampleData.textChunk');
       return {
         headers,
         rows: [row]
@@ -528,7 +528,7 @@ const LocalExportTab = ({
 
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 2 }}>
         <Button onClick={handleOpenBalanceDialog} variant="outlined" sx={{ borderRadius: 2 }}>
-          {t('export.balancedExport', '平衡导出')}
+          {t('exportDialog.balancedExport')}
         </Button>
         <Button onClick={handleExport} variant="contained" sx={{ borderRadius: 2 }}>
           {t('export.confirmExport')}
@@ -547,12 +547,10 @@ const LocalExportTab = ({
           }
         }}
       >
-        <DialogTitle>
-          {t('export.balancedExport.title', '平衡导出设置')}
-        </DialogTitle>
+        <DialogTitle>{t('exportDialog.balancedExportTitle')}</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
-            {t('export.balancedExport.description', '根据领域标签配置每个类别的数据量，实现数据集的平衡导出')}
+            {t('exportDialog.balancedExportDescription')}
           </Typography>
 
           {error && (
@@ -570,24 +568,24 @@ const LocalExportTab = ({
               {/* 批量设置 */}
               <Box sx={{ mb: 3, p: 2, bgcolor: 'grey.50', borderRadius: 1 }}>
                 <Typography variant="subtitle2" gutterBottom>
-                  快速设置
+                  {t('exportDialog.quickSettings')}
                 </Typography>
                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
                   <Button size="small" onClick={() => setAllToSameCount(50)}>
-                    全部设为50
+                    {t('exportDialog.setAllTo50')}
                   </Button>
                   <Button size="small" onClick={() => setAllToSameCount(100)}>
-                    全部设为100
+                    {t('exportDialog.setAllTo100')}
                   </Button>
                   <Button size="small" onClick={() => setAllToSameCount(200)}>
-                    全部设为200
+                    {t('exportDialog.setAllTo200')}
                   </Button>
                   <TextField
                     size="small"
                     type="number"
-                    placeholder="自定义数量"
+                    placeholder={t('exportDialog.customAmount')}
                     sx={{ width: 120 }}
-                    onKeyPress={(e) => {
+                    onKeyPress={e => {
                       if (e.key === 'Enter') {
                         setAllToSameCount(e.target.value);
                         e.target.value = '';
@@ -602,21 +600,19 @@ const LocalExportTab = ({
                 <Table size="small">
                   <TableHead>
                     <TableRow>
-                      <TableCell>标签名称</TableCell>
-                      <TableCell align="right">可用数量</TableCell>
-                      <TableCell align="right">导出数量</TableCell>
-                      <TableCell align="right">设置</TableCell>
+                      <TableCell>{t('exportDialog.tagName')}</TableCell>
+                      <TableCell align="right">{t('exportDialog.availableCount')}</TableCell>
+                      <TableCell align="right">{t('exportDialog.exportCount')}</TableCell>
+                      <TableCell align="right">{t('exportDialog.settings')}</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {balanceConfig.map((config) => (
+                    {balanceConfig.map(config => (
                       <TableRow key={config.tagLabel}>
                         <TableCell>
                           <Chip label={config.tagLabel} size="small" variant="outlined" />
                         </TableCell>
-                        <TableCell align="right">
-                          {config.availableCount}
-                        </TableCell>
+                        <TableCell align="right">{config.availableCount}</TableCell>
                         <TableCell align="right">
                           <strong>{config.maxCount}</strong>
                         </TableCell>
@@ -625,7 +621,7 @@ const LocalExportTab = ({
                             size="small"
                             type="number"
                             value={config.maxCount}
-                            onChange={(e) => updateBalanceConfig(config.tagLabel, e.target.value)}
+                            onChange={e => updateBalanceConfig(config.tagLabel, e.target.value)}
                             inputProps={{
                               min: 0,
                               max: config.availableCount,
@@ -643,23 +639,17 @@ const LocalExportTab = ({
               {/* 统计信息 */}
               <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
                 <Typography variant="body2">
-                  <strong>总导出数量: {totalCount}</strong> | 
-                  标签数量: {balanceConfig.filter(c => c.maxCount > 0).length} / {balanceConfig.length}
+                  <strong>{t('exportDialog.totalExportCount')}: {totalCount}</strong> | {t('exportDialog.tagCount')}:{' '}
+                  {balanceConfig.filter(c => c.maxCount > 0).length} / {balanceConfig.length}
                 </Typography>
               </Box>
             </>
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setBalanceDialogOpen(false)}>
-            {t('common.cancel', '取消')}
-          </Button>
-          <Button
-            variant="contained"
-            onClick={handleBalancedExport}
-            disabled={loading || totalCount === 0}
-          >
-            {t('export.export', '导出')} ({totalCount})
+          <Button onClick={() => setBalanceDialogOpen(false)}>{t('common.cancel', '取消')}</Button>
+          <Button variant="contained" onClick={handleBalancedExport} disabled={loading || totalCount === 0}>
+            {t('exportDialog.export')} ({totalCount})
           </Button>
         </DialogActions>
       </Dialog>
