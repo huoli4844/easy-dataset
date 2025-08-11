@@ -57,8 +57,11 @@ export async function GET(request, { params }) {
     const field = searchParams.get('field') || 'question';
     // 获取思维链筛选参数
     const hasCot = searchParams.get('hasCot') || 'all';
+    // 获取蒸馏数据集筛选参数
+    const isDistill = searchParams.get('isDistill') || 'all';
+
     if (selectedAll) {
-      let data = await getDatasetsIds(projectId, confirmed, searchParams.get('input'), field, hasCot);
+      let data = await getDatasetsIds(projectId, confirmed, searchParams.get('input'), field, hasCot, isDistill);
       return NextResponse.json(data);
     }
 
@@ -70,7 +73,8 @@ export async function GET(request, { params }) {
       confirmed,
       searchParams.get('input'),
       field, // 传递搜索字段参数
-      hasCot // 传递思维链筛选参数
+      hasCot, // 传递思维链筛选参数
+      isDistill // 传递蒸馏数据集筛选参数
     );
 
     return NextResponse.json(datasets);

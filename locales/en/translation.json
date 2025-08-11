@@ -487,7 +487,10 @@
     "answerCount": "{{count}} Answers",
     "answered": "Answered",
     "enableShortcuts": "Page shortcut key",
-    "shortcutsHelp": "Press ← forward, press → backward, press y to confirm, press d to delete"
+    "shortcutsHelp": "Press ← forward, press → backward, press y to confirm, press d to delete",
+    "filterDistill": "Distilled Dataset",
+    "filterDistillYes": "Distilled Dataset",
+    "filterDistillNo": "Non-distilled Dataset"
   },
   "update": {
     "newVersion": "New Version",

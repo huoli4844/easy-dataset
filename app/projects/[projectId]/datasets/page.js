@@ -150,6 +150,7 @@ export default function DatasetsPage({ params }) {
   const [selectedIds, setselectedIds] = useState([]);
   const [filterConfirmed, setFilterConfirmed] = useState('all');
   const [filterHasCot, setFilterHasCot] = useState('all');
+  const [filterIsDistill, setFilterIsDistill] = useState('all');
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const { t } = useTranslation();
   // 删除进度状态
@@ -174,7 +175,7 @@ export default function DatasetsPage({ params }) {
     try {
       setLoading(true);
       const response = await axios.get(
-        `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}&status=${filterConfirmed}&input=${searchQuery}&field=${searchField}&hasCot=${filterHasCot}`
+        `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}&status=${filterConfirmed}&input=${searchQuery}&field=${searchField}&hasCot=${filterHasCot}&isDistill=${filterIsDistill}`
       );
       setDatasets(response.data);
     } catch (error) {
@@ -186,7 +187,7 @@ export default function DatasetsPage({ params }) {
 
   useEffect(() => {
     getDatasetsList();
-  }, [projectId, page, rowsPerPage, filterConfirmed, debouncedSearchQuery, searchField, filterHasCot]);
+  }, [projectId, page, rowsPerPage, filterConfirmed, debouncedSearchQuery, searchField, filterHasCot, filterIsDistill]);
 
   // 处理页码变化
   const handlePageChange = (event, newPage) => {
@@ -545,12 +546,30 @@ export default function DatasetsPage({ params }) {
               <MenuItem value="no">{t('datasets.filterNoCot')}</MenuItem>
             </Select>
           </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterDistill')}
+            </Typography>
+            <Select
+              value={filterIsDistill}
+              onChange={e => setFilterIsDistill(e.target.value)}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="all">{t('datasets.filterAll')}</MenuItem>
+              <MenuItem value="yes">{t('datasets.filterDistillYes')}</MenuItem>
+              <MenuItem value="no">{t('datasets.filterDistillNo')}</MenuItem>
+            </Select>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
               setFilterConfirmed('all');
               setFilterHasCot('all');
+              setFilterIsDistill('all');
               getDatasetsList();
             }}
           >

@@ -489,7 +489,10 @@
     "answerCount": "{{count}} 个答案",
     "answered": "已生成答案",
     "enableShortcuts": "翻页快捷键",
-    "shortcutsHelp": "按 ← 向前，按 → 向后，按 y 确认，按 d 删除"
+    "shortcutsHelp": "按 ← 向前，按 → 向后，按 y 确认，按 d 删除",
+    "filterDistill": "是否蒸馏数据集",
+    "filterDistillYes": "蒸馏数据集",
+    "filterDistillNo": "非蒸馏数据集"
   },
   "update": {
     "newVersion": "新版本",
