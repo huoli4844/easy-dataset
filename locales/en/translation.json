@@ -816,5 +816,38 @@
     "editSuccess": "Successfully edited {{count}} text chunks",
     "editFailed": "Batch edit failed",
     "previewNote": "The above is a preview of the first selected text chunk. All selected text chunks will undergo the same modification"
+  },
+  "errors": {
+    "projectIdRequired": "Project ID cannot be empty",
+    "getDatasetsFailed": "Failed to get datasets",
+    "getTagStatsFailed": "Failed to get tag statistics",
+    "deleteFileFailed": "Error deleting file",
+    "recordNotFound": "Current record does not exist",
+    "mineruTokenNotFound": "Token configuration not found, please check if MinerU token is configured in task settings",
+    "mineruLocalUrlNotFound": "MinerU local URL configuration not found, please check if MinerU local URL is configured in task settings"
+  },
+  "sampleData": {
+    "questionContent": "Question content",
+    "answerContent": "Answer content",
+    "cotContent": "Chain of thought content",
+    "domainLabel": "Domain label",
+    "textChunk": "Text chunk"
+  },
+  "exportDialog": {
+    "balancedExport": "Balanced Export",
+    "balancedExportTitle": "Balanced Export Settings",
+    "balancedExportDescription": "Configure the data volume for each category based on domain tags to achieve balanced dataset export",
+    "quickSettings": "Quick Settings",
+    "setAllTo50": "Set all to 50",
+    "setAllTo100": "Set all to 100",
+    "setAllTo200": "Set all to 200",
+    "customAmount": "Custom amount",
+    "tagName": "Tag Name",
+    "availableCount": "Available Count",
+    "exportCount": "Export Count",
+    "settings": "Settings",
+    "totalExportCount": "Total export count",
+    "tagCount": "Tag count",
+    "export": "Export"
   }
 }

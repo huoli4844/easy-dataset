@@ -263,7 +263,7 @@ export default function FileUploader({
 
       toast.success(t('textSplit.deleteSuccess', { fileName: fileToDelete.fileName }));
     } catch (error) {
-      console.error('删除文件出错:', error);
+      console.error('Error deleting file:', error);
       toast.error(error.message);
     } finally {
       setLoading(false);
