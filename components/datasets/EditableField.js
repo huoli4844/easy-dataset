@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Typography, Button, TextField, IconButton, Switch, FormControlLabel } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
@@ -25,7 +25,22 @@ export default function EditableField({
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
-  const [useMarkdown, setUseMarkdown] = useState(false);
+
+  // 从 localStorage 读取 Markdown 展示设置，默认为 false
+  const [useMarkdown, setUseMarkdown] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('dataset-use-markdown');
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
+
+  // 当 useMarkdown 状态改变时，保存到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('dataset-use-markdown', JSON.stringify(useMarkdown));
+    }
+  }, [useMarkdown]);
 
   const toggleMarkdown = () => {
     setUseMarkdown(!useMarkdown);
