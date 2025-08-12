@@ -27,6 +27,7 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useRouter } from 'next/navigation';
 import ExportDatasetDialog from '@/components/ExportDatasetDialog';
+import ExportProgressDialog from '@/components/ExportProgressDialog';
 import { useTranslation } from 'react-i18next';
 import DatasetList from './components/DatasetList';
 import useDatasetExport from './hooks/useDatasetExport';
@@ -158,6 +159,13 @@ export default function DatasetsPage({ params }) {
     total: 0, // 总删除问题数量
     completed: 0, // 已删除完成的数量
     percentage: 0 // 进度百分比
+  });
+  // 导出进度状态
+  const [exportProgress, setExportProgress] = useState({
+    show: false, // 是否显示进度
+    processed: 0, // 已处理数量
+    total: 0, // 总数量
+    hasMore: true // 是否还有更多数据
   });
 
   // 3. 添加打开导出对话框的处理函数
@@ -297,14 +305,45 @@ export default function DatasetsPage({ params }) {
   };
 
   // 使用自定义 Hook 处理数据集导出逻辑
-  const { exportDatasets } = useDatasetExport(projectId);
+  const { exportDatasets, exportDatasetsStreaming } = useDatasetExport(projectId);
 
-  // 处理导出数据集
+  // 处理导出数据集 - 智能选择导出方式
   const handleExportDatasets = async exportOptions => {
-    const success = await exportDatasets(exportOptions);
-    if (success) {
-      // 关闭导出对话框
-      handleCloseExportDialog();
+    try {
+      // 获取当前筛选条件下的数据总量
+      const totalCount = datasets.total || 0;
+
+      // 设置阈值：超过2000条数据使用流式导出
+      const STREAMING_THRESHOLD = 2000;
+
+      let success = false;
+
+      if (totalCount > STREAMING_THRESHOLD) {
+        // 使用流式导出，显示进度
+        setExportProgress({ show: true, processed: 0, total: totalCount });
+
+        success = await exportDatasetsStreaming(exportOptions, progress => {
+          setExportProgress(prev => ({
+            ...prev,
+            processed: progress.processed,
+            hasMore: progress.hasMore
+          }));
+        });
+
+        // 隐藏进度
+        setExportProgress({ show: false, processed: 0, total: 0 });
+      } else {
+        // 使用传统导出方式
+        success = await exportDatasets(exportOptions);
+      }
+
+      if (success) {
+        // 关闭导出对话框
+        handleCloseExportDialog();
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+      setExportProgress({ show: false, processed: 0, total: 0 });
     }
   };
 
@@ -594,6 +633,9 @@ export default function DatasetsPage({ params }) {
         onExport={handleExportDatasets}
         projectId={projectId}
       />
+
+      {/* 导出进度对话框 */}
+      <ExportProgressDialog open={exportProgress.show} progress={exportProgress} />
     </Container>
   );
 }
