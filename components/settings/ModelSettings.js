@@ -44,6 +44,8 @@ import { modelConfigListAtom, selectedModelInfoAtom } from '@/lib/store';
 export default function ModelSettings({ projectId }) {
   const { t } = useTranslation();
   const router = useRouter();
+  // 展示端点的最大长度
+  const MAX_ENDPOINT_DISPLAY = 80;
   // 模型对话框状态
   const [openModelDialog, setOpenModelDialog] = useState(false);
   const [editingModel, setEditingModel] = useState(null);
@@ -88,6 +90,16 @@ export default function ModelSettings({ projectId }) {
       getProviderModels(response.data[0].id);
       setProviderOptions(providerOptions);
     });
+  };
+
+  // 裁剪端点展示长度（不改变实际值，仅用于 UI 展示）
+  const formatEndpoint = model => {
+    if (!model?.endpoint) return '';
+    const base = model.endpoint.replace(/^https?:\/\//, '');
+    if (base.length > MAX_ENDPOINT_DISPLAY) {
+      return base.slice(0, MAX_ENDPOINT_DISPLAY) + '…';
+    }
+    return base;
   };
 
   // 获取模型配置列表
@@ -351,12 +363,11 @@ export default function ModelSettings({ projectId }) {
                   <Tooltip title={getModelStatusInfo(model).text}>
                     <Chip
                       icon={getModelStatusInfo(model).icon}
-                      label={
-                        model.endpoint.replace(/^https?:\/\//, '') +
-                        (model.providerId.toLowerCase() !== 'ollama' && !model.apiKey
+                      label={`${formatEndpoint(model)}${
+                        model.providerId.toLowerCase() !== 'ollama' && !model.apiKey
                           ? ' (' + t('models.unconfiguredAPIKey') + ')'
-                          : '')
-                      }
+                          : ''
+                      }`}
                       size="small"
                       color={getModelStatusInfo(model).color}
                       variant="outlined"
