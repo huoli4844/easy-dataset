@@ -146,15 +146,20 @@ const useDatasetExport = projectId => {
       });
     } else if (exportOptions.formatType === 'custom') {
       // 处理自定义格式
-      const { questionField, answerField, cotField, includeLabels, includeChunk } = exportOptions.customFields;
+      const { questionField, answerField, cotField, includeLabels, includeChunk, questionOnly } =
+        exportOptions.customFields;
       formattedData = dataToExport.map(({ question, answer, cot, questionLabel: labels, chunkContent }) => {
         const item = {
-          [questionField]: question,
-          [answerField]: answer
+          [questionField]: question
         };
 
-        // 如果有思维链且用户选择包含思维链，则添加思维链字段
-        if (cot && exportOptions.includeCOT && cotField) {
+        // 如果不是仅导出问题模式，添加答案字段
+        if (!questionOnly) {
+          item[answerField] = answer;
+        }
+
+        // 如果有思维链且用户选择包含思维链，且不是仅导出问题模式，则添加思维链字段
+        if (cot && exportOptions.includeCOT && cotField && !questionOnly) {
           item[cotField] = cot;
         }
 

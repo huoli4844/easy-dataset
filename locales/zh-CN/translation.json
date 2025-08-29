@@ -397,6 +397,7 @@
     "cotFieldName": "思维链字段名",
     "includeLabels": "包含标签",
     "includeChunk": "包含文本块",
+    "questionOnly": "仅导出问题",
     "localTab": "导出到本地",
     "llamaFactoryTab": "在 LLaMA Factory 中使用",
     "huggingFaceTab": "上传至 Hugging Face",
