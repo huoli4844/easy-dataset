@@ -10,7 +10,7 @@ const useDatasetExport = projectId => {
   // 分批导出数据集（用于大数据量）
   const exportDatasetsStreaming = async (exportOptions, onProgress) => {
     try {
-      const batchSize = exportOptions.batchSize || 2000;
+      const batchSize = exportOptions.batchSize || 1000;
       let offset = 0;
       let allData = [];
       let hasMore = true;
@@ -35,6 +35,30 @@ const useDatasetExport = projectId => {
 
         const response = await axios.get(apiUrl);
         const batchResult = response.data;
+
+        // 如果需要包含文本块内容，批量查询并填充
+        if (exportOptions.customFields?.includeChunk && batchResult.data.length > 0) {
+          const chunkNames = batchResult.data.map(item => item.chunkName).filter(name => name); // 过滤掉空值
+
+          if (chunkNames.length > 0) {
+            try {
+              const chunkResponse = await axios.post(`/api/projects/${projectId}/chunks/batch-content`, {
+                chunkNames
+              });
+              const chunkContentMap = chunkResponse.data;
+
+              // 填充 chunkContent
+              batchResult.data.forEach(item => {
+                if (item.chunkName && chunkContentMap[item.chunkName]) {
+                  item.chunkContent = chunkContentMap[item.chunkName];
+                }
+              });
+            } catch (chunkError) {
+              console.error('获取文本块内容失败:', chunkError);
+              // 继续处理，但不包含文本块内容
+            }
+          }
+        }
 
         allData.push(...batchResult.data);
         hasMore = batchResult.hasMore;
@@ -123,7 +147,7 @@ const useDatasetExport = projectId => {
     } else if (exportOptions.formatType === 'custom') {
       // 处理自定义格式
       const { questionField, answerField, cotField, includeLabels, includeChunk } = exportOptions.customFields;
-      formattedData = dataToExport.map(({ question, answer, cot, questionLabel: labels, chunkId }) => {
+      formattedData = dataToExport.map(({ question, answer, cot, questionLabel: labels, chunkContent }) => {
         const item = {
           [questionField]: question,
           [answerField]: answer
@@ -139,9 +163,9 @@ const useDatasetExport = projectId => {
           item.label = labels.split(' ')[1];
         }
 
-        // 如果需要包含文本块
-        if (includeChunk && chunkId) {
-          item.chunk = chunkId;
+        // 如果需要包含文本块内容
+        if (includeChunk && chunkContent) {
+          item.chunk = chunkContent;
         }
 
         return item;

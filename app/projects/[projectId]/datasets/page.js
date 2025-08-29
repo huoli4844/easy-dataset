@@ -314,11 +314,15 @@ export default function DatasetsPage({ params }) {
       const totalCount = datasets.total || 0;
 
       // 设置阈值：超过2000条数据使用流式导出
-      const STREAMING_THRESHOLD = 2000;
+      const STREAMING_THRESHOLD = 1000;
+
+      // 检查是否需要包含文本块内容
+      const needsChunkContent = exportOptions.formatType === 'custom' && exportOptions.customFields?.includeChunk;
 
       let success = false;
 
-      if (totalCount > STREAMING_THRESHOLD) {
+      // 如果数据量大于阈值或需要查询文本块内容，使用流式导出
+      if (totalCount > STREAMING_THRESHOLD || needsChunkContent) {
         // 使用流式导出，显示进度
         setExportProgress({ show: true, processed: 0, total: totalCount });
 

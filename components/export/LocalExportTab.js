@@ -263,7 +263,7 @@ const LocalExportTab = ({
       const headers = [customFields.questionField, customFields.answerField];
       if (includeCOT) headers.push(customFields.cotField);
       if (customFields.includeLabels) headers.push('labels');
-      if (customFields.includeChunk) headers.push('chunkId');
+      if (customFields.includeChunk) headers.push('chunk');
 
       const row = {
         [customFields.questionField]: t('sampleData.questionContent'),
@@ -271,7 +271,7 @@ const LocalExportTab = ({
       };
       if (includeCOT) row[customFields.cotField] = t('sampleData.cotContent');
       if (customFields.includeLabels) row.labels = t('sampleData.domainLabel');
-      if (customFields.includeChunk) row.chunkId = t('sampleData.textChunk');
+      if (customFields.includeChunk) row.chunk = t('sampleData.textChunk');
       return {
         headers,
         rows: [row]
@@ -402,10 +402,10 @@ const LocalExportTab = ({
             }
             label={t('export.includeLabels')}
           />
-          {/* <FormControlLabel
+          <FormControlLabel
             control={<Checkbox checked={customFields.includeChunk} onChange={handleIncludeChunkChange} size="small" />}
             label={t('export.includeChunk')}
-          /> */}
+          />
         </Box>
       )}
 
