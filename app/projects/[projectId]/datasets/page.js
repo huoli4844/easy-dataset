@@ -16,10 +16,14 @@ import {
   Card,
   useTheme,
   alpha,
+  InputAdornment,
   InputBase,
   LinearProgress,
   Select,
-  MenuItem
+  MenuItem,
+  Slider,
+  TextField,
+  Tooltip
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
@@ -152,6 +156,10 @@ export default function DatasetsPage({ params }) {
   const [filterConfirmed, setFilterConfirmed] = useState('all');
   const [filterHasCot, setFilterHasCot] = useState('all');
   const [filterIsDistill, setFilterIsDistill] = useState('all');
+  const [filterScoreRange, setFilterScoreRange] = useState([0, 5]);
+  const [filterCustomTag, setFilterCustomTag] = useState('');
+  const [filterNoteKeyword, setFilterNoteKeyword] = useState('');
+  const [availableTags, setAvailableTags] = useState([]);
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const { t } = useTranslation();
   // 删除进度状态
@@ -182,9 +190,37 @@ export default function DatasetsPage({ params }) {
   const getDatasetsList = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}&status=${filterConfirmed}&input=${searchQuery}&field=${searchField}&hasCot=${filterHasCot}&isDistill=${filterIsDistill}`
-      );
+      let url = `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}`;
+
+      if (filterConfirmed !== 'all') {
+        url += `&status=${filterConfirmed}`;
+      }
+
+      if (searchQuery) {
+        url += `&input=${encodeURIComponent(searchQuery)}&field=${searchField}`;
+      }
+
+      if (filterHasCot !== 'all') {
+        url += `&hasCot=${filterHasCot}`;
+      }
+
+      if (filterIsDistill !== 'all') {
+        url += `&isDistill=${filterIsDistill}`;
+      }
+
+      if (filterScoreRange[0] > 0 || filterScoreRange[1] < 5) {
+        url += `&scoreRange=${filterScoreRange[0]}-${filterScoreRange[1]}`;
+      }
+
+      if (filterCustomTag) {
+        url += `&customTag=${encodeURIComponent(filterCustomTag)}`;
+      }
+
+      if (filterNoteKeyword) {
+        url += `&noteKeyword=${encodeURIComponent(filterNoteKeyword)}`;
+      }
+
+      const response = await axios.get(url);
       setDatasets(response.data);
     } catch (error) {
       toast.error(error.message);
@@ -195,7 +231,32 @@ export default function DatasetsPage({ params }) {
 
   useEffect(() => {
     getDatasetsList();
-  }, [projectId, page, rowsPerPage, filterConfirmed, debouncedSearchQuery, searchField, filterHasCot, filterIsDistill]);
+    // 获取项目中所有使用过的标签
+    const fetchAvailableTags = async () => {
+      try {
+        const response = await fetch(`/api/projects/${projectId}/datasets/tags`);
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableTags(data.tags || []);
+        }
+      } catch (error) {
+        console.error('获取标签失败:', error);
+      }
+    };
+    fetchAvailableTags();
+  }, [
+    projectId,
+    page,
+    rowsPerPage,
+    filterConfirmed,
+    debouncedSearchQuery,
+    searchField,
+    filterHasCot,
+    filterIsDistill,
+    filterScoreRange,
+    filterCustomTag,
+    filterNoteKeyword
+  ]);
 
   // 处理页码变化
   const handlePageChange = (event, newPage) => {
@@ -606,6 +667,71 @@ export default function DatasetsPage({ params }) {
               <MenuItem value="no">{t('datasets.filterDistillNo')}</MenuItem>
             </Select>
           </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterScoreRange')}
+            </Typography>
+            <Box sx={{ px: 1, mt: 2 }}>
+              <Slider
+                value={filterScoreRange}
+                onChange={(event, newValue) => setFilterScoreRange(newValue)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={5}
+                marks={[
+                  { value: 0, label: '0' },
+                  { value: 2.5, label: '2.5' },
+                  { value: 5, label: '5' }
+                ]}
+                sx={{ mt: 1 }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                {filterScoreRange[0]} - {filterScoreRange[1]} 分
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterCustomTag')}
+            </Typography>
+            <Select
+              value={filterCustomTag}
+              onChange={e => setFilterCustomTag(e.target.value)}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="">{t('datasets.filterAll')}</MenuItem>
+              {availableTags.map(tag => (
+                <MenuItem key={tag} value={tag}>
+                  {tag}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterNoteKeyword')}
+            </Typography>
+            <TextField
+              value={filterNoteKeyword}
+              onChange={e => setFilterNoteKeyword(e.target.value)}
+              placeholder={t('datasets.filterNoteKeywordPlaceholder')}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button
@@ -613,6 +739,9 @@ export default function DatasetsPage({ params }) {
               setFilterConfirmed('all');
               setFilterHasCot('all');
               setFilterIsDistill('all');
+              setFilterScoreRange([0, 5]);
+              setFilterCustomTag('');
+              setFilterNoteKeyword('');
               getDatasetsList();
             }}
           >

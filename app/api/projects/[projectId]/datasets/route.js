@@ -47,34 +47,50 @@ export async function GET(request, { params }) {
     if (!projectId) {
       return NextResponse.json({ error: '项目ID不能为空' }, { status: 400 });
     }
-    let status = searchParams.get('status');
+    const page = parseInt(searchParams.get('page')) || 1;
+    const size = parseInt(searchParams.get('size')) || 10;
+    const input = searchParams.get('input');
+    const field = searchParams.get('field') || 'question';
+    const status = searchParams.get('status');
+    const hasCot = searchParams.get('hasCot');
+    const isDistill = searchParams.get('isDistill');
+    const scoreRange = searchParams.get('scoreRange');
+    const customTag = searchParams.get('customTag');
+    const noteKeyword = searchParams.get('noteKeyword');
     let confirmed = undefined;
     if (status === 'confirmed') confirmed = true;
     if (status === 'unconfirmed') confirmed = false;
 
     let selectedAll = searchParams.get('selectedAll');
-    // 获取搜索字段参数
-    const field = searchParams.get('field') || 'question';
-    // 获取思维链筛选参数
-    const hasCot = searchParams.get('hasCot') || 'all';
-    // 获取蒸馏数据集筛选参数
-    const isDistill = searchParams.get('isDistill') || 'all';
 
     if (selectedAll) {
-      let data = await getDatasetsIds(projectId, confirmed, searchParams.get('input'), field, hasCot, isDistill);
+      let data = await getDatasetsIds(
+        projectId,
+        confirmed,
+        input,
+        field,
+        hasCot,
+        isDistill,
+        scoreRange,
+        customTag,
+        noteKeyword
+      );
       return NextResponse.json(data);
     }
 
     // 获取数据集
     const datasets = await getDatasetsByPagination(
       projectId,
-      parseInt(searchParams.get('page')),
-      parseInt(searchParams.get('size')),
+      page,
+      size,
       confirmed,
-      searchParams.get('input'),
+      input,
       field, // 传递搜索字段参数
       hasCot, // 传递思维链筛选参数
-      isDistill // 传递蒸馏数据集筛选参数
+      isDistill, // 传递蒸馏数据集筛选参数
+      scoreRange, // 传递评分范围筛选参数
+      customTag, // 传递自定义标签筛选参数
+      noteKeyword // 传递备注关键字筛选参数
     );
 
     return NextResponse.json(datasets);
