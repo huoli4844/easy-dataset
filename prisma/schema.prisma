@@ -102,6 +102,9 @@ model Datasets {
   questionLabel String
   cot           String
   confirmed     Boolean  @default(false)
+  score         Float    @default(0)
+  tags          String   @default("")
+  note          String   @default("")
   createAt      DateTime @default(now())
   updateAt      DateTime @updatedAt
 

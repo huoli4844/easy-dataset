@@ -6,6 +6,7 @@ import DatasetHeader from '@/components/datasets/DatasetHeader';
 import DatasetMetadata from '@/components/datasets/DatasetMetadata';
 import EditableField from '@/components/datasets/EditableField';
 import OptimizeDialog from '@/components/datasets/OptimizeDialog';
+import DatasetRatingSection from '@/components/datasets/DatasetRatingSection';
 import useDatasetDetails from '@/app/projects/[projectId]/datasets/[datasetId]/useDatasetDetails';
 import { useTranslation } from 'react-i18next';
 
@@ -129,6 +130,16 @@ export default function DatasetDetailsPage({ params }) {
 
         <DatasetMetadata currentDataset={currentDataset} onViewChunk={handleViewChunk} />
       </Paper>
+
+      {/* 评分、标签、备注区域 */}
+      <DatasetRatingSection
+        dataset={currentDataset}
+        projectId={projectId}
+        onUpdate={() => {
+          // 更新成功后刷新数据，保持页面状态同步
+          // 这里可以调用 useDatasetDetails 的刷新逻辑
+        }}
+      />
 
       {/* 消息提示 */}
       <Snackbar

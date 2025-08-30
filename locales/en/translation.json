@@ -496,7 +496,39 @@
     "shortcutsHelp": "Press ← forward, press → backward, press y to confirm, press d to delete",
     "filterDistill": "Distilled Dataset",
     "filterDistillYes": "Distilled Dataset",
-    "filterDistillNo": "Non-distilled Dataset"
+    "filterDistillNo": "Non-distilled Dataset",
+    "evaluation": "Dataset Evaluation",
+    "rating": "Rating",
+    "customTags": "Custom Tags",
+    "addCustomTag": "Add custom tag...",
+    "note": "Note",
+    "addNote": "Add note...",
+    "noNote": "No notes",
+    "clickToAddNote": "Click to add note...",
+    "enterNote": "Enter note...",
+    "noteShortcuts": "Ctrl+Enter to save, Esc to cancel",
+    "updateSuccess": "Update successful",
+    "updateFailed": "Update failed"
+  },
+  "rating": {
+    "veryPoor": "Very Poor",
+    "poor": "Poor",
+    "belowAverage": "Below Average",
+    "fair": "Fair",
+    "average": "Average",
+    "good": "Good",
+    "veryGood": "Very Good",
+    "excellent": "Excellent",
+    "outstanding": "Outstanding",
+    "perfect": "Perfect",
+    "unrated": "Unrated"
+  },
+  "tags": {
+    "noTags": "No tags",
+    "addTag": "Add tag...",
+    "addCustomTag": "Add custom tag",
+    "maxTagsReached": "Maximum {{maxTags}} tags reached",
+    "availableTagsHint": "Select from existing tags or enter new ones"
   },
   "update": {
     "newVersion": "New Version",
