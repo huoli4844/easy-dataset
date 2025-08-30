@@ -378,7 +378,7 @@
     "customInstruction": "Custom Instruction Content",
     "instructionPlaceholder": "Enter fixed instruction content",
     "instructionHelperText": "When using input field, you can specify fixed instruction content here",
-    "title": "Export Dataset",
+    "title": "Export",
     "format": "Format",
     "fileFormat": "File Format",
     "systemPrompt": "System Prompt",
