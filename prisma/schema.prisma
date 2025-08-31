@@ -105,6 +105,7 @@ model Datasets {
   score         Float    @default(0)
   tags          String   @default("")
   note          String   @default("")
+  other         String   @default("") // 存储其他字段的JSON字符串
   createAt      DateTime @default(now())
   updateAt      DateTime @updatedAt
 

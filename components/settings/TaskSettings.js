@@ -393,29 +393,6 @@ export default function TaskSettings({ projectId }) {
           </Grid>
         </CardContent>
       </Card>
-      <Card>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" gutterBottom>
-                {t('settings.datasetUpload')}
-              </Typography>
-              <TextField
-                fullWidth
-                label={t('settings.huggingfaceToken')}
-                name="huggingfaceToken"
-                value={taskSettings.huggingfaceToken}
-                onChange={handleSettingChange}
-                type="password"
-                helperText={t('settings.huggingfaceNotImplemented')}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">hf_</InputAdornment>
-                }}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
       <Snackbar
         open={success}
         autoHideDuration={2000}

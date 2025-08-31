@@ -28,10 +28,12 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useRouter } from 'next/navigation';
 import ExportDatasetDialog from '@/components/ExportDatasetDialog';
 import ExportProgressDialog from '@/components/ExportProgressDialog';
+import ImportDatasetDialog from '@/components/datasets/ImportDatasetDialog';
 import { useTranslation } from 'react-i18next';
 import DatasetList from './components/DatasetList';
 import useDatasetExport from './hooks/useDatasetExport';
@@ -152,6 +154,7 @@ export default function DatasetsPage({ params }) {
   const debouncedSearchQuery = useDebounce(searchQuery);
   const [searchField, setSearchField] = useState('question'); // 新增：筛选字段，默认为问题
   const [exportDialog, setExportDialog] = useState({ open: false });
+  const [importDialog, setImportDialog] = useState({ open: false });
   const [selectedIds, setselectedIds] = useState([]);
   const [filterConfirmed, setFilterConfirmed] = useState('all');
   const [filterHasCot, setFilterHasCot] = useState('all');
@@ -184,6 +187,23 @@ export default function DatasetsPage({ params }) {
   // 4. 添加关闭导出对话框的处理函数
   const handleCloseExportDialog = () => {
     setExportDialog({ open: false });
+  };
+
+  // 5. 添加打开导入对话框的处理函数
+  const handleOpenImportDialog = () => {
+    setImportDialog({ open: true });
+  };
+
+  // 6. 添加关闭导入对话框的处理函数
+  const handleCloseImportDialog = () => {
+    setImportDialog({ open: false });
+  };
+
+  // 7. 导入成功后的处理函数
+  const handleImportSuccess = () => {
+    // 刷新数据集列表
+    getDatasetsList();
+    toast.success(t('import.importSuccess', '数据集导入成功'));
   };
 
   // 获取数据集列表
@@ -550,6 +570,14 @@ export default function DatasetsPage({ params }) {
             </Button>
             <Button
               variant="outlined"
+              startIcon={<FileUploadIcon />}
+              sx={{ borderRadius: 2 }}
+              onClick={handleOpenImportDialog}
+            >
+              {t('import.title', '导入')}
+            </Button>
+            <Button
+              variant="outlined"
               startIcon={<FileDownloadIcon />}
               sx={{ borderRadius: 2 }}
               onClick={handleOpenExportDialog}
@@ -764,6 +792,13 @@ export default function DatasetsPage({ params }) {
         open={exportDialog.open}
         onClose={handleCloseExportDialog}
         onExport={handleExportDatasets}
+        projectId={projectId}
+      />
+
+      <ImportDatasetDialog
+        open={importDialog.open}
+        onClose={handleCloseImportDialog}
+        onImportSuccess={handleImportSuccess}
         projectId={projectId}
       />
 
