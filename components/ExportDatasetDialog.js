@@ -24,7 +24,8 @@ const ExportDatasetDialog = ({ open, onClose, onExport, projectId }) => {
     answerField: 'output',
     cotField: 'complexCOT', // 添加思维链字段名
     includeLabels: false,
-    includeChunk: false // 添加是否包含chunk字段
+    includeChunk: false, // 添加是否包含chunk字段
+    questionOnly: false // 添加仅导出问题选项
   });
 
   const handleFileFormatChange = event => {
@@ -82,6 +83,13 @@ const ExportDatasetDialog = ({ open, onClose, onExport, projectId }) => {
     setCustomFields({
       ...customFields,
       includeChunk: event.target.checked
+    });
+  };
+
+  const handleQuestionOnlyChange = event => {
+    setCustomFields({
+      ...customFields,
+      questionOnly: event.target.checked
     });
   };
 
@@ -149,9 +157,11 @@ const ExportDatasetDialog = ({ open, onClose, onExport, projectId }) => {
             handleCustomFieldChange={handleCustomFieldChange}
             handleIncludeLabelsChange={handleIncludeLabelsChange}
             handleIncludeChunkChange={handleIncludeChunkChange}
+            handleQuestionOnlyChange={handleQuestionOnlyChange}
             handleAlpacaFieldTypeChange={handleAlpacaFieldTypeChange}
             handleCustomInstructionChange={handleCustomInstructionChange}
             handleExport={handleExport}
+            projectId={projectId}
           />
         )}
 

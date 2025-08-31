@@ -4,6 +4,7 @@ import { Box, Typography, Checkbox, Button, Select, MenuItem, Tooltip, Menu, Ico
 import QuizIcon from '@mui/icons-material/Quiz';
 import DownloadIcon from '@mui/icons-material/Download';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
@@ -74,6 +75,35 @@ export default function ChunkListHeader({
       }
     } catch (error) {
       console.error('创建自动提取问题任务失败:', error);
+      toast.error(t('tasks.createFailed', { defaultValue: '创建任务失败' }) + ': ' + error.message);
+    }
+  };
+
+  // 创建自动数据清洗任务
+  const handleCreateAutoDataCleaningTask = async () => {
+    if (!projectId || !selectedModel?.id) {
+      toast.error(t('textSplit.selectModelFirst', { defaultValue: '请先选择模型' }));
+      return;
+    }
+
+    try {
+      // 调用创建任务接口
+      const response = await axios.post(`/api/projects/${projectId}/tasks`, {
+        taskType: 'data-cleaning',
+        modelInfo: selectedModel,
+        language: i18n.language,
+        detail: '批量数据清洗任务'
+      });
+
+      if (response.data?.code === 0) {
+        toast.success(
+          t('tasks.createSuccess', { defaultValue: '后台任务已创建，系统将自动处理所有文本块进行数据清洗' })
+        );
+      } else {
+        toast.error(t('tasks.createFailed', { defaultValue: '创建任务失败' }) + ': ' + response.data?.message);
+      }
+    } catch (error) {
+      console.error('创建自动数据清洗任务失败:', error);
       toast.error(t('tasks.createFailed', { defaultValue: '创建任务失败' }) + ': ' + error.message);
     }
   };
@@ -188,6 +218,24 @@ export default function ChunkListHeader({
               sx={{ minWidth: { xs: '48%', sm: 'auto' } }}
             >
               {t('textSplit.autoGenerateQuestions')}
+            </Button>
+          </Tooltip>
+
+          <Tooltip
+            title={t('textSplit.autoDataCleaningTip', {
+              defaultValue: '创建后台批量处理任务：自动对所有文本块进行数据清洗'
+            })}
+          >
+            <Button
+              variant="outlined"
+              color="success"
+              startIcon={<CleaningServicesIcon />}
+              onClick={() => handleCreateAutoDataCleaningTask()}
+              disabled={!projectId || !selectedModel?.id}
+              size="medium"
+              sx={{ minWidth: { xs: '48%', sm: 'auto' } }}
+            >
+              {t('textSplit.autoDataCleaning', { defaultValue: '自动数据清洗' })}
             </Button>
           </Tooltip>
 

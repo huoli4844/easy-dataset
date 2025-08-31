@@ -139,7 +139,7 @@ export default function UploadArea({
             <input
               type="file"
               hidden
-              accept=".md,.txt,.docx,.pdf"
+              accept=".md,.txt,.docx,.pdf,.epub"
               multiple
               onChange={onFileSelect}
               disabled={!selectedModel?.id || uploading}

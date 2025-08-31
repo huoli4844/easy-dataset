@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
  * @param {Function} props.onDelete - Delete callback
  * @param {Function} props.onEdit - Edit callback
  * @param {Function} props.onGenerateQuestions - Generate questions callback
+ * @param {Function} props.onDataCleaning - Data cleaning callback
  * @param {string} props.questionFilter - Question filter
  * @param {Function} props.onQuestionFilterChange - Question filter change callback
  * @param {Object} props.selectedModel - 选中的模型信息
@@ -28,6 +29,7 @@ export default function ChunkList({
   onDelete,
   onEdit,
   onGenerateQuestions,
+  onDataCleaning,
   loading = false,
   questionFilter,
   setQuestionFilter,
@@ -235,6 +237,7 @@ export default function ChunkList({
               onDelete={() => handleOpenDeleteDialog(chunk.id)}
               onEdit={handleEditChunk}
               onGenerateQuestions={() => onGenerateQuestions && onGenerateQuestions([chunk.id])}
+              onDataCleaning={() => onDataCleaning && onDataCleaning([chunk.id])}
               projectId={projectId}
               selectedModel={selectedModel}
             />

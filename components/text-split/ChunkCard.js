@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import QuizIcon from '@mui/icons-material/Quiz';
 import EditIcon from '@mui/icons-material/Edit';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { useTheme } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
 
@@ -73,6 +74,7 @@ export default function ChunkCard({
   onView,
   onDelete,
   onGenerateQuestions,
+  onDataCleaning,
   onEdit,
   projectId,
   selectedModel // 添加selectedModel参数
@@ -292,6 +294,32 @@ export default function ChunkCard({
                 }}
               >
                 <QuizIcon fontSize="small" />
+              </IconButton>
+            </span>
+          </Tooltip>
+
+          <Tooltip
+            title={
+              selectedModel?.id
+                ? t('textSplit.dataCleaning', { defaultValue: '数据清洗' })
+                : t('textSplit.selectModelFirst', { defaultValue: '请先在右上角选择模型' })
+            }
+          >
+            <span>
+              <IconButton
+                size="small"
+                color="success"
+                onClick={onDataCleaning}
+                disabled={!selectedModel?.id}
+                sx={{
+                  bgcolor: theme.palette.mode === 'dark' ? 'rgba(76, 175, 80, 0.08)' : 'rgba(46, 125, 50, 0.08)',
+                  '&.Mui-disabled': {
+                    opacity: 0.6,
+                    pointerEvents: 'auto' // 允许鼠标悬停显示tooltip
+                  }
+                }}
+              >
+                <CleaningServicesIcon fontSize="small" />
               </IconButton>
             </span>
           </Tooltip>

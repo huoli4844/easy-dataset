@@ -32,6 +32,7 @@ import { useAtomValue } from 'jotai/index';
 import { selectedModelInfoAtom } from '@/lib/store';
 import useChunks from './useChunks';
 import useQuestionGeneration from './useQuestionGeneration';
+import useDataCleaning from './useDataCleaning';
 import useFileProcessing from './useFileProcessing';
 import useFileProcessingStatus from '@/hooks/useFileProcessingStatus';
 import { toast } from 'sonner';
@@ -130,10 +131,16 @@ export default function TextSplitPage({ params }) {
     handleGenerateQuestions
   } = useQuestionGeneration(projectId, taskSettings);
 
+  const {
+    processing: dataCleaningProcessing,
+    progress: dataCleaningProgress,
+    handleDataCleaning
+  } = useDataCleaning(projectId, taskSettings);
+
   const { fileProcessing, progress: pdfProgress, handleFileProcessing } = useFileProcessing(projectId);
 
   // 当前页面使用的进度状态
-  const progress = processing ? questionProgress : pdfProgress;
+  const progress = processing ? questionProgress : dataCleaningProcessing ? dataCleaningProgress : pdfProgress;
 
   // 加载文本块数据和文件列表
   useEffect(() => {
@@ -156,6 +163,11 @@ export default function TextSplitPage({ params }) {
   // 包装生成问题的处理函数
   const onGenerateQuestions = async chunkIds => {
     await handleGenerateQuestions(chunkIds, selectedModelInfo, fetchChunks);
+  };
+
+  // 包装数据清洗的处理函数
+  const onDataCleaning = async chunkIds => {
+    await handleDataCleaning(chunkIds, selectedModelInfo, fetchChunks);
   };
 
   useEffect(() => {
@@ -259,6 +271,7 @@ export default function TextSplitPage({ params }) {
             onDelete={handleDeleteChunk}
             onEdit={handleEditChunk}
             onGenerateQuestions={onGenerateQuestions}
+            onDataCleaning={onDataCleaning}
             loading={loading}
             questionFilter={questionFilter}
             setQuestionFilter={setQuestionFilter}
@@ -275,6 +288,9 @@ export default function TextSplitPage({ params }) {
 
       {/* 处理中蒙版 */}
       <LoadingBackdrop open={processing} title={t('textSplit.processing')} progress={progress} />
+
+      {/* 数据清洗进度蒙版 */}
+      <LoadingBackdrop open={dataCleaningProcessing} title={t('textSplit.dataCleaning')} progress={progress} />
 
       {/* 文件处理进度蒙版 */}
       <LoadingBackdrop open={fileProcessing} title={t('textSplit.pdfProcessing')} progress={progress} />

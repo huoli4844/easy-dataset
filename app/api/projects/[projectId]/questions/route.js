@@ -59,8 +59,8 @@ export async function POST(request, { params }) {
       return NextResponse.json({ error: 'Missing necessary parameters' }, { status: 400 });
     }
 
-    // 检查问题是否已存在
-    const existingQuestion = await isExistByQuestion(question);
+    // 检查问题是否已存在（仅在当前项目中检查）
+    const existingQuestion = await isExistByQuestion(question, projectId);
     if (existingQuestion) {
       return NextResponse.json({ error: 'Question already exists' }, { status: 400 });
     }

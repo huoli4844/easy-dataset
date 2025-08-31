@@ -141,8 +141,8 @@ services:
     ports:
       - '1717:1717'
     volumes:
-      - ${LOCAL_DB_PATH}:/app/local-db
-      - ${LOCAL_PRISMA_PATH}:/app/prisma
+      - ./local-db:/app/local-db
+      # - ./prisma:/app/prisma 如果需要挂载请先手动初始化数据库文件
     restart: unless-stopped
 ```
 

@@ -6,6 +6,7 @@ import DatasetHeader from '@/components/datasets/DatasetHeader';
 import DatasetMetadata from '@/components/datasets/DatasetMetadata';
 import EditableField from '@/components/datasets/EditableField';
 import OptimizeDialog from '@/components/datasets/OptimizeDialog';
+import DatasetRatingSection from '@/components/datasets/DatasetRatingSection';
 import useDatasetDetails from '@/app/projects/[projectId]/datasets/[datasetId]/useDatasetDetails';
 import { useTranslation } from 'react-i18next';
 
@@ -72,7 +73,7 @@ export default function DatasetDetailsPage({ params }) {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
       {/* 顶部导航栏 */}
       <DatasetHeader
         projectId={projectId}
@@ -87,48 +88,75 @@ export default function DatasetDetailsPage({ params }) {
         onDelete={handleDelete}
       />
 
-      {/* 主要内容 */}
-      <Paper sx={{ p: 3 }}>
-        <Box sx={{ mb: 3 }}>
-          <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1 }}>
-            {t('datasets.question')}
-          </Typography>
-          <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
-            {currentDataset.question}
-          </Typography>
+      {/* 主要布局：左右分栏 */}
+      <Box sx={{ display: 'flex', gap: 3, alignItems: 'flex-start' }}>
+        {/* 左侧主要内容区域 */}
+        <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Paper sx={{ p: 3 }}>
+            <Box sx={{ mb: 3 }}>
+              <Typography variant="subtitle1" color="text.secondary" sx={{ mb: 1 }}>
+                {t('datasets.question')}
+              </Typography>
+              <Typography variant="body1" sx={{ whiteSpace: 'pre-wrap' }}>
+                {currentDataset.question}
+              </Typography>
+            </Box>
+
+            <EditableField
+              label={t('datasets.answer')}
+              value={answerValue}
+              editing={editingAnswer}
+              onEdit={() => setEditingAnswer(true)}
+              onChange={e => setAnswerValue(e.target.value)}
+              onSave={() => handleSave('answer', answerValue)}
+              onCancel={() => {
+                setEditingAnswer(false);
+                setAnswerValue(currentDataset.answer);
+              }}
+              onOptimize={handleOpenOptimizeDialog}
+              tokenCount={answerTokens}
+            />
+
+            <EditableField
+              label={t('datasets.cot')}
+              value={cotValue}
+              editing={editingCot}
+              onEdit={() => setEditingCot(true)}
+              onChange={e => setCotValue(e.target.value)}
+              onSave={() => handleSave('cot', cotValue)}
+              onCancel={() => {
+                setEditingCot(false);
+                setCotValue(currentDataset.cot || '');
+              }}
+              tokenCount={cotTokens}
+            />
+          </Paper>
         </Box>
 
-        <EditableField
-          label={t('datasets.answer')}
-          value={answerValue}
-          editing={editingAnswer}
-          onEdit={() => setEditingAnswer(true)}
-          onChange={e => setAnswerValue(e.target.value)}
-          onSave={() => handleSave('answer', answerValue)}
-          onCancel={() => {
-            setEditingAnswer(false);
-            setAnswerValue(currentDataset.answer);
+        {/* 右侧固定侧边栏 */}
+        <Box
+          sx={{
+            width: 360,
+            position: 'sticky',
+            top: 24,
+            maxHeight: 'calc(100vh - 48px)',
+            overflowY: 'auto'
           }}
-          onOptimize={handleOpenOptimizeDialog}
-          tokenCount={answerTokens}
-        />
+        >
+          {/* 数据集元数据信息 */}
+          <DatasetMetadata currentDataset={currentDataset} onViewChunk={handleViewChunk} />
 
-        <EditableField
-          label={t('datasets.cot')}
-          value={cotValue}
-          editing={editingCot}
-          onEdit={() => setEditingCot(true)}
-          onChange={e => setCotValue(e.target.value)}
-          onSave={() => handleSave('cot', cotValue)}
-          onCancel={() => {
-            setEditingCot(false);
-            setCotValue(currentDataset.cot || '');
-          }}
-          tokenCount={cotTokens}
-        />
-
-        <DatasetMetadata currentDataset={currentDataset} onViewChunk={handleViewChunk} />
-      </Paper>
+          {/* 评分、标签、备注区域 */}
+          <DatasetRatingSection
+            dataset={currentDataset}
+            projectId={projectId}
+            onUpdate={() => {
+              // 更新成功后刷新数据，保持页面状态同步
+              // 这里可以调用 useDatasetDetails 的刷新逻辑
+            }}
+          />
+        </Box>
+      </Box>
 
       {/* 消息提示 */}
       <Snackbar

@@ -374,6 +374,15 @@ export default function TaskSettings({ projectId }) {
             <Grid item xs={12}>
               <TextField
                 fullWidth
+                label={t('settings.minerULocalUrl')}
+                name="minerULocalUrl"
+                value={taskSettings.minerULocalUrl}
+                onChange={handleSettingChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
                 label={t('settings.visionConcurrencyLimit')}
                 name="visionConcurrencyLimit"
                 value={taskSettings.visionConcurrencyLimit ? taskSettings.visionConcurrencyLimit : 5}
@@ -384,24 +393,20 @@ export default function TaskSettings({ projectId }) {
           </Grid>
         </CardContent>
       </Card>
-      <Card>
+      <Card style={{ marginBottom: 20 }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <Typography variant="subtitle1" gutterBottom>
-                {t('settings.datasetUpload')}
+                {t('settings.huggingfaceSettings')}
               </Typography>
               <TextField
                 fullWidth
                 label={t('settings.huggingfaceToken')}
                 name="huggingfaceToken"
-                value={taskSettings.huggingfaceToken}
+                value={taskSettings.huggingfaceToken || ''}
                 onChange={handleSettingChange}
                 type="password"
-                helperText={t('settings.huggingfaceNotImplemented')}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">hf_</InputAdornment>
-                }}
               />
             </Grid>
           </Grid>

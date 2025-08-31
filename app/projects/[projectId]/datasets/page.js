@@ -16,17 +16,24 @@ import {
   Card,
   useTheme,
   alpha,
+  InputAdornment,
   InputBase,
   LinearProgress,
   Select,
-  MenuItem
+  MenuItem,
+  Slider,
+  TextField,
+  Tooltip
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SearchIcon from '@mui/icons-material/Search';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { useRouter } from 'next/navigation';
 import ExportDatasetDialog from '@/components/ExportDatasetDialog';
+import ExportProgressDialog from '@/components/ExportProgressDialog';
+import ImportDatasetDialog from '@/components/datasets/ImportDatasetDialog';
 import { useTranslation } from 'react-i18next';
 import DatasetList from './components/DatasetList';
 import useDatasetExport from './hooks/useDatasetExport';
@@ -147,9 +154,15 @@ export default function DatasetsPage({ params }) {
   const debouncedSearchQuery = useDebounce(searchQuery);
   const [searchField, setSearchField] = useState('question'); // 新增：筛选字段，默认为问题
   const [exportDialog, setExportDialog] = useState({ open: false });
+  const [importDialog, setImportDialog] = useState({ open: false });
   const [selectedIds, setselectedIds] = useState([]);
   const [filterConfirmed, setFilterConfirmed] = useState('all');
   const [filterHasCot, setFilterHasCot] = useState('all');
+  const [filterIsDistill, setFilterIsDistill] = useState('all');
+  const [filterScoreRange, setFilterScoreRange] = useState([0, 5]);
+  const [filterCustomTag, setFilterCustomTag] = useState('');
+  const [filterNoteKeyword, setFilterNoteKeyword] = useState('');
+  const [availableTags, setAvailableTags] = useState([]);
   const [filterDialogOpen, setFilterDialogOpen] = useState(false);
   const { t } = useTranslation();
   // 删除进度状态
@@ -157,6 +170,13 @@ export default function DatasetsPage({ params }) {
     total: 0, // 总删除问题数量
     completed: 0, // 已删除完成的数量
     percentage: 0 // 进度百分比
+  });
+  // 导出进度状态
+  const [exportProgress, setExportProgress] = useState({
+    show: false, // 是否显示进度
+    processed: 0, // 已处理数量
+    total: 0, // 总数量
+    hasMore: true // 是否还有更多数据
   });
 
   // 3. 添加打开导出对话框的处理函数
@@ -169,13 +189,58 @@ export default function DatasetsPage({ params }) {
     setExportDialog({ open: false });
   };
 
+  // 5. 添加打开导入对话框的处理函数
+  const handleOpenImportDialog = () => {
+    setImportDialog({ open: true });
+  };
+
+  // 6. 添加关闭导入对话框的处理函数
+  const handleCloseImportDialog = () => {
+    setImportDialog({ open: false });
+  };
+
+  // 7. 导入成功后的处理函数
+  const handleImportSuccess = () => {
+    // 刷新数据集列表
+    getDatasetsList();
+    toast.success(t('import.importSuccess', '数据集导入成功'));
+  };
+
   // 获取数据集列表
   const getDatasetsList = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(
-        `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}&status=${filterConfirmed}&input=${searchQuery}&field=${searchField}&hasCot=${filterHasCot}`
-      );
+      let url = `/api/projects/${projectId}/datasets?page=${page}&size=${rowsPerPage}`;
+
+      if (filterConfirmed !== 'all') {
+        url += `&status=${filterConfirmed}`;
+      }
+
+      if (searchQuery) {
+        url += `&input=${encodeURIComponent(searchQuery)}&field=${searchField}`;
+      }
+
+      if (filterHasCot !== 'all') {
+        url += `&hasCot=${filterHasCot}`;
+      }
+
+      if (filterIsDistill !== 'all') {
+        url += `&isDistill=${filterIsDistill}`;
+      }
+
+      if (filterScoreRange[0] > 0 || filterScoreRange[1] < 5) {
+        url += `&scoreRange=${filterScoreRange[0]}-${filterScoreRange[1]}`;
+      }
+
+      if (filterCustomTag) {
+        url += `&customTag=${encodeURIComponent(filterCustomTag)}`;
+      }
+
+      if (filterNoteKeyword) {
+        url += `&noteKeyword=${encodeURIComponent(filterNoteKeyword)}`;
+      }
+
+      const response = await axios.get(url);
       setDatasets(response.data);
     } catch (error) {
       toast.error(error.message);
@@ -186,7 +251,32 @@ export default function DatasetsPage({ params }) {
 
   useEffect(() => {
     getDatasetsList();
-  }, [projectId, page, rowsPerPage, filterConfirmed, debouncedSearchQuery, searchField, filterHasCot]);
+    // 获取项目中所有使用过的标签
+    const fetchAvailableTags = async () => {
+      try {
+        const response = await fetch(`/api/projects/${projectId}/datasets/tags`);
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableTags(data.tags || []);
+        }
+      } catch (error) {
+        console.error('获取标签失败:', error);
+      }
+    };
+    fetchAvailableTags();
+  }, [
+    projectId,
+    page,
+    rowsPerPage,
+    filterConfirmed,
+    debouncedSearchQuery,
+    searchField,
+    filterHasCot,
+    filterIsDistill,
+    filterScoreRange,
+    filterCustomTag,
+    filterNoteKeyword
+  ]);
 
   // 处理页码变化
   const handlePageChange = (event, newPage) => {
@@ -296,14 +386,49 @@ export default function DatasetsPage({ params }) {
   };
 
   // 使用自定义 Hook 处理数据集导出逻辑
-  const { exportDatasets } = useDatasetExport(projectId);
+  const { exportDatasets, exportDatasetsStreaming } = useDatasetExport(projectId);
 
-  // 处理导出数据集
+  // 处理导出数据集 - 智能选择导出方式
   const handleExportDatasets = async exportOptions => {
-    const success = await exportDatasets(exportOptions);
-    if (success) {
-      // 关闭导出对话框
-      handleCloseExportDialog();
+    try {
+      // 获取当前筛选条件下的数据总量
+      const totalCount = datasets.total || 0;
+
+      // 设置阈值：超过2000条数据使用流式导出
+      const STREAMING_THRESHOLD = 1000;
+
+      // 检查是否需要包含文本块内容
+      const needsChunkContent = exportOptions.formatType === 'custom' && exportOptions.customFields?.includeChunk;
+
+      let success = false;
+
+      // 如果数据量大于阈值或需要查询文本块内容，使用流式导出
+      if (totalCount > STREAMING_THRESHOLD || needsChunkContent) {
+        // 使用流式导出，显示进度
+        setExportProgress({ show: true, processed: 0, total: totalCount });
+
+        success = await exportDatasetsStreaming(exportOptions, progress => {
+          setExportProgress(prev => ({
+            ...prev,
+            processed: progress.processed,
+            hasMore: progress.hasMore
+          }));
+        });
+
+        // 隐藏进度
+        setExportProgress({ show: false, processed: 0, total: 0 });
+      } else {
+        // 使用传统导出方式
+        success = await exportDatasets(exportOptions);
+      }
+
+      if (success) {
+        // 关闭导出对话框
+        handleCloseExportDialog();
+      }
+    } catch (error) {
+      console.error('Export failed:', error);
+      setExportProgress({ show: false, processed: 0, total: 0 });
     }
   };
 
@@ -445,6 +570,14 @@ export default function DatasetsPage({ params }) {
             </Button>
             <Button
               variant="outlined"
+              startIcon={<FileUploadIcon />}
+              sx={{ borderRadius: 2 }}
+              onClick={handleOpenImportDialog}
+            >
+              {t('import.title', '导入')}
+            </Button>
+            <Button
+              variant="outlined"
               startIcon={<FileDownloadIcon />}
               sx={{ borderRadius: 2 }}
               onClick={handleOpenExportDialog}
@@ -545,12 +678,98 @@ export default function DatasetsPage({ params }) {
               <MenuItem value="no">{t('datasets.filterNoCot')}</MenuItem>
             </Select>
           </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterDistill')}
+            </Typography>
+            <Select
+              value={filterIsDistill}
+              onChange={e => setFilterIsDistill(e.target.value)}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="all">{t('datasets.filterAll')}</MenuItem>
+              <MenuItem value="yes">{t('datasets.filterDistillYes')}</MenuItem>
+              <MenuItem value="no">{t('datasets.filterDistillNo')}</MenuItem>
+            </Select>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterScoreRange')}
+            </Typography>
+            <Box sx={{ px: 1, mt: 2 }}>
+              <Slider
+                value={filterScoreRange}
+                onChange={(event, newValue) => setFilterScoreRange(newValue)}
+                valueLabelDisplay="auto"
+                min={0}
+                max={5}
+                marks={[
+                  { value: 0, label: '0' },
+                  { value: 2.5, label: '2.5' },
+                  { value: 5, label: '5' }
+                ]}
+                sx={{ mt: 1 }}
+              />
+              <Typography variant="caption" color="text.secondary">
+                {filterScoreRange[0]} - {filterScoreRange[1]} 分
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterCustomTag')}
+            </Typography>
+            <Select
+              value={filterCustomTag}
+              onChange={e => setFilterCustomTag(e.target.value)}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+            >
+              <MenuItem value="">{t('datasets.filterAll')}</MenuItem>
+              {availableTags.map(tag => (
+                <MenuItem key={tag} value={tag}>
+                  {tag}
+                </MenuItem>
+              ))}
+            </Select>
+          </Box>
+
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('datasets.filterNoteKeyword')}
+            </Typography>
+            <TextField
+              value={filterNoteKeyword}
+              onChange={e => setFilterNoteKeyword(e.target.value)}
+              placeholder={t('datasets.filterNoteKeywordPlaceholder')}
+              fullWidth
+              size="small"
+              sx={{ mt: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                )
+              }}
+            />
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
               setFilterConfirmed('all');
               setFilterHasCot('all');
+              setFilterIsDistill('all');
+              setFilterScoreRange([0, 5]);
+              setFilterCustomTag('');
+              setFilterNoteKeyword('');
               getDatasetsList();
             }}
           >
@@ -575,6 +794,16 @@ export default function DatasetsPage({ params }) {
         onExport={handleExportDatasets}
         projectId={projectId}
       />
+
+      <ImportDatasetDialog
+        open={importDialog.open}
+        onClose={handleCloseImportDialog}
+        onImportSuccess={handleImportSuccess}
+        projectId={projectId}
+      />
+
+      {/* 导出进度对话框 */}
+      <ExportProgressDialog open={exportProgress.show} progress={exportProgress} />
     </Container>
   );
 }

@@ -141,12 +141,14 @@ services:
     ports:
       - '1717:1717'
     volumes:
-      - ${LOCAL_DB_PATH}:/app/local-db
-      - ${LOCAL_PRISMA_PATH}:/app/prisma
+      - ./local-db:/app/local-db
+      # - ./prisma:/app/prisma  If mounting is required, please manually initialize the database file first.
     restart: unless-stopped
 ```
 
 > **Note:** Replace `{YOUR_LOCAL_DB_PATH}` and `{LOCAL_PRISMA_PATH}` with the actual paths where you want to store the local database. It is recommended to use the `local-db` and `prisma` folders in the current code repository directory to maintain consistency with the database paths when starting via NPM.
+
+> **Note:** If you need to mount the database file (PRISMA), you need to run `npm run db:push` in advance to initialize the database file.
 
 3. Start with docker-compose:
 
