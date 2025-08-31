@@ -13,7 +13,8 @@ export default function PromptSettings({ projectId }) {
     questionPrompt: '',
     answerPrompt: '',
     labelPrompt: '',
-    domainTreePrompt: ''
+    domainTreePrompt: '',
+    cleanPrompt: ''
   });
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +30,8 @@ export default function PromptSettings({ projectId }) {
           questionPrompt: config.questionPrompt || '',
           answerPrompt: config.answerPrompt || '',
           labelPrompt: config.labelPrompt || '',
-          domainTreePrompt: config.domainTreePrompt || ''
+          domainTreePrompt: config.domainTreePrompt || '',
+          cleanPrompt: config.cleanPrompt || ''
         };
         setPrompts(promptFields);
       } catch (error) {
@@ -175,6 +177,26 @@ export default function PromptSettings({ projectId }) {
                 value={prompts.domainTreePrompt}
                 onChange={handleChange('domainTreePrompt')}
                 placeholder={t('settings.domainTreePromptPlaceholder')}
+              />
+            </CardContent>
+          </Card>
+        </Grid>
+
+        {/* 数据清洗提示词 */}
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+                {t('settings.cleanPrompt')}
+              </Typography>
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                size="small"
+                value={prompts.cleanPrompt}
+                onChange={handleChange('cleanPrompt')}
+                placeholder={t('settings.cleanPromptPlaceholder')}
               />
             </CardContent>
           </Card>
