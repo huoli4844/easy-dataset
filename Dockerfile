@@ -71,9 +71,10 @@ COPY --from=builder /app/electron ./electron
 # 复制 prisma 到模板目录（用于自动初始化）
 COPY --from=builder /app/prisma /app/prisma-template
 
-# 复制并设置 entrypoint 脚本
+# 复制并设置 entrypoint 脚本（sed 去除 Windows 换行符 \r，防止 CRLF 导致 "no such file or directory"）
 COPY docker-entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+RUN sed -i 's/\r$//' /usr/local/bin/docker-entrypoint.sh && \
+    chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # 设置生产环境
 ENV NODE_ENV=production
