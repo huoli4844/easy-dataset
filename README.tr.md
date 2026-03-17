@@ -245,7 +245,7 @@ Tüm arka plan görevlerini izleyin ve yönetin:
 
 Ayarlar sayfasında LLM API'nizi yapılandırın:
 
-1. **Sağlayıcı**: OpenAI, Ollama, 智谱AI veya özel seçin
+1. **Sağlayıcı**: OpenAI, MiniMax, Ollama, 智谱AI veya özel seçin
 2. **API Anahtarı**: API anahtarınızı girin (gerekirse)
 3. **Model**: Kullanılacak modeli seçin
 4. **Temel URL**: Özel API'ler için temel URL'yi ayarlayın
