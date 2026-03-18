@@ -169,6 +169,20 @@ describe('constant/model.js – MiniMax entry', () => {
     );
   });
 
+  it('should list MiniMax-M2.7 as default model', () => {
+    assert.ok(
+      modelSrc.includes('MiniMax-M2.7'),
+      'model.js must list MiniMax-M2.7'
+    );
+  });
+
+  it('should list MiniMax-M2.7-highspeed model', () => {
+    assert.ok(
+      modelSrc.includes('MiniMax-M2.7-highspeed'),
+      'model.js must list MiniMax-M2.7-highspeed'
+    );
+  });
+
   it('should list MiniMax-M2.5 model', () => {
     assert.ok(
       modelSrc.includes('MiniMax-M2.5'),
