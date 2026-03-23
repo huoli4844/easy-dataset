@@ -179,7 +179,7 @@ export default function DatasetRatingSection({ dataset, projectId, onUpdate, cur
     }
 
     try {
-      const language = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
+      const language = i18n.language;
       const response = await fetch(`/api/projects/${projectId}/datasets/generate-eval-variant`, {
         method: 'POST',
         headers: {

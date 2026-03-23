@@ -8,7 +8,9 @@
  * @returns {string} 语言代码 ('zh-CN' 或 'en')
  */
 export const getLanguageFromPromptKey = promptKey => {
-  return promptKey?.endsWith('_EN') ? 'en' : 'zh-CN';
+  if (promptKey?.endsWith('_EN')) return 'en';
+  if (promptKey?.endsWith('_TR')) return 'tr';
+  return 'zh-CN';
 };
 
 /**

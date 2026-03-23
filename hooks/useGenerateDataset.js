@@ -22,7 +22,7 @@ export function useGenerateDataset() {
       const isImageQuestion = !!imageId;
 
       // 调用API生成数据集
-      const currentLanguage = i18n.language === 'zh-CN' ? '中文' : 'en';
+      const currentLanguage = i18n.language;
 
       if (isImageQuestion) {
         // 图片问题：调用图片数据集生成接口
@@ -89,14 +89,14 @@ export function useGenerateDataset() {
               imageName: question.imageName,
               question,
               model,
-              language: i18n.language === 'zh-CN' ? '中文' : 'en'
+              language: i18n.language
             });
           } else {
             // 文本问题
             response = await axios.post(`/api/projects/${projectId}/datasets`, {
               questionId: question.id,
               model,
-              language: i18n.language === 'zh-CN' ? '中文' : 'en'
+              language: i18n.language
             });
           }
 

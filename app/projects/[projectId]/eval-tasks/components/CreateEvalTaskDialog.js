@@ -67,7 +67,7 @@ export default function CreateEvalTaskDialog({ open, onClose, projectId, onSucce
   // 当有主观题时，初始化评分规则
   useEffect(() => {
     if (hasSubjectiveQuestions && open) {
-      initScoreAnchors(i18n.language === 'zh-CN' ? 'zh-CN' : 'en');
+      initScoreAnchors(i18n.language);
     }
   }, [hasSubjectiveQuestions, open, i18n.language]);
 
@@ -175,7 +175,7 @@ export default function CreateEvalTaskDialog({ open, onClose, projectId, onSucce
           judgeModelId, // 分开传递
           judgeProviderId, // 分开传递
           evalDatasetIds: ids,
-          language: i18n.language === 'zh-CN' ? 'zh-CN' : 'en',
+          language: i18n.language,
           customScoreAnchors: Object.keys(customScoreAnchors).length > 0 ? customScoreAnchors : undefined
         })
       });
