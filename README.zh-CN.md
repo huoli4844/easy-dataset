@@ -16,7 +16,7 @@
 
 **一个强大的大型语言模型微调数据集创建工具**
 
-[简体中文](./README.zh-CN.md) | [English](./README.md)
+[简体中文](./README.zh-CN.md) | [English](./README.md) | [Türkçe](./README.tr.md)
 
 [功能特点](#功能特点) • [快速开始](#本地运行) • [使用文档](https://docs.easy-dataset.com/) • [贡献](#贡献) • [许可证](#许可证)
 
