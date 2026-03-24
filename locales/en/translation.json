@@ -252,6 +252,9 @@
     "generateMultiTurnDataset": "Generate Multi-Turn Dataset",
     "generateImageDataset": "Generate Image Q&A Dataset",
     "generateMultiTurnDatasetDesc": "Generate multi-turn conversation dataset based on questions",
+    "multiTurnNotConfigured": "Please configure multi-turn conversation parameters in project settings first",
+    "generateMultiTurn": "Generate Multi-Turn Conversation",
+    "multiTurnGenerated": "Multi-turn conversation dataset generated successfully!",
     "deleteConfirm": "Are you sure you want to delete this question? This action cannot be undone."
   },
   "common": {
@@ -350,7 +353,9 @@
     "deleteSuccess": "Project deleted successfully",
     "deleteFailed": "Failed to delete project",
     "backToHome": "Back to Home",
-    "deleteConfirmTitle": "Confirm Delete"
+    "deleteConfirmTitle": "Confirm Delete",
+    "title": "Project Management",
+    "openDirectory": "Open Project Directory"
   },
   "textSplit": {
     "dragToUpload": "Drag files to upload",
@@ -596,7 +601,32 @@
     "sampleAnalysis": "Model's chain of thought content",
     "sampleFinal": "Model response",
     "sampleThinking": "Model's chain of thought content",
-    "fetchLabelStatsError": "Failed to fetch label statistics:"
+    "fetchLabelStatsError": "Failed to fetch label statistics:",
+    "answerFieldName": "Answer Field Name",
+    "cotFieldName": "CoT Field Name",
+    "includeLabels": "Include Labels",
+    "includeChunk": "Include Text Chunk",
+    "questionOnly": "Export Questions Only",
+    "localTab": "Local Export",
+    "llamaFactoryTab": "Use in LLaMA Factory",
+    "huggingFaceTab": "Upload to HuggingFace",
+    "configExists": "Configuration File Exists",
+    "configPath": "Configuration File Path",
+    "updateConfig": "Update LLaMA Factory Configuration",
+    "noConfig": "No configuration file exists, click the button below to generate",
+    "generateConfig": "Generate LLaMA Factory Configuration",
+    "huggingFaceComingSoon": "HuggingFace export feature coming soon",
+    "uploadToHuggingFace": "Upload to HuggingFace",
+    "datasetName": "Dataset Name",
+    "datasetNameHelp": "Format: username/dataset-name",
+    "privateDataset": "Private Dataset",
+    "datasetSettings": "Dataset Settings",
+    "exportOptions": "Export Options",
+    "uploadSuccess": "Dataset uploaded successfully to HuggingFace",
+    "viewOnHuggingFace": "View on HuggingFace",
+    "noTokenWarning": "Hugging Face Token not found. Please configure it in project settings.",
+    "goToSettings": "Go to Settings",
+    "tokenHelp": "You can get your token from HuggingFace settings page"
   },
   "import": {
     "title": "Import",
