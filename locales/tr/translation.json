@@ -1022,7 +1022,7 @@
     "pleaseSelectModel": "Lütfen en az bir model seçin",
     "title": "Model Ayarları",
     "add": "Model Ekle",
-    "unselectedModel": "Seçilmemiş Model",
+    "unselectedModel": "Model Seçilmemiş",
     "unconfiguredAPIKey": "Yapılandırılmamış API Anahtarı",
     "saveAllModels": "Tüm Modelleri Kaydet",
     "edit": "Düzenle",
