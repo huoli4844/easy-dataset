@@ -315,7 +315,10 @@
     "back": "返回",
     "refresh": "刷新",
     "expand": "展开全部",
-    "collapse": "收起内容"
+    "collapse": "收起内容",
+    "project": "项目",
+    "error": "错误",
+    "contextNavigation": "上下文导航"
   },
   "home": {
     "title": "Easy Dataset",
@@ -327,6 +330,8 @@
     "reuseConfig": "复用模型配置",
     "noReuse": "不复用配置",
     "selectProject": "选择项目",
+    "allProjects": "所有项目",
+    "projectMenu": "项目菜单",
     "fetchFailed": "获取项目列表失败",
     "fetchError": "获取项目列表出错",
     "loading": "正在加载您的项目...",
