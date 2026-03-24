@@ -59,11 +59,11 @@ export const useMultiTurnData = projectId => {
     const filterValues = options.filterValues ?? filters;
     const showLoading = options.showLoading ?? true;
 
+    const controller = new AbortController();
     try {
       if (abortRef.current) {
         abortRef.current.abort();
       }
-      const controller = new AbortController();
       abortRef.current = controller;
 
       if (showLoading) {
