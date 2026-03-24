@@ -324,7 +324,10 @@
     "back": "Geri",
     "refresh": "Yenile",
     "expand": "Tümünü Genişlet",
-    "collapse": "Daralt"
+    "collapse": "Daralt",
+    "project": "Proje",
+    "error": "Hata",
+    "contextNavigation": "Bağlam navigasyonu"
   },
   "home": {
     "title": "Easy Dataset",
@@ -336,6 +339,8 @@
     "reuseConfig": "Model Yapılandırmasını Yeniden Kullan",
     "noReuse": "Yapılandırma Yeniden Kullanma",
     "selectProject": "Proje Seç",
+    "allProjects": "Tüm Projeler",
+    "projectMenu": "Proje menüsü",
     "fetchFailed": "Proje listesi getirilemedi",
     "fetchError": "Proje listesi getirilirken hata",
     "loading": "Projeleriniz yükleniyor...",
