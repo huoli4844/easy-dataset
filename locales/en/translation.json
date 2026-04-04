@@ -318,7 +318,10 @@
     "back": "Back",
     "refresh": "Refresh",
     "expand": "Expand All",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "project": "Project",
+    "error": "Error",
+    "contextNavigation": "Context navigation"
   },
   "home": {
     "title": "Easy Dataset",
@@ -330,6 +333,8 @@
     "reuseConfig": "Reuse Model Config",
     "noReuse": "No Configuration Reuse",
     "selectProject": "Select Project",
+    "allProjects": "All Projects",
+    "projectMenu": "Project menu",
     "fetchFailed": "Failed to fetch project list",
     "fetchError": "Error fetching project list",
     "loading": "Loading your projects...",
