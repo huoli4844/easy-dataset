@@ -73,6 +73,12 @@ export const MODEL_PROVIDERS = [
     name: '阿里云百炼',
     defaultEndpoint: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     defaultModels: ['qwen-max-latest', 'qwen-max-2025-01-25']
+  },
+  {
+    id: 'minimax',
+    name: 'MiniMax',
+    defaultEndpoint: 'https://api.minimax.io/v1',
+    defaultModels: ['MiniMax-M2.7', 'MiniMax-M2.7-highspeed', 'MiniMax-M2.5', 'MiniMax-M2.5-highspeed']
   }
 ];
 
