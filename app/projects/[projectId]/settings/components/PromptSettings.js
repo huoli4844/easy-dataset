@@ -21,7 +21,7 @@ export default function PromptSettings() {
   const { showSuccess, showErrorMessage, SnackbarComponent } = useSnackbar();
 
   // 基础状态
-  const [currentLanguage, setCurrentLanguage] = useState(i18n.language === 'en' ? 'en' : 'zh-CN');
+  const [currentLanguage, setCurrentLanguage] = useState(i18n.language);
   const [loading, setLoading] = useState(false);
   const [templates, setTemplates] = useState({});
   const [customPrompts, setCustomPrompts] = useState([]);
@@ -51,7 +51,7 @@ export default function PromptSettings() {
 
   // 监听语言变化
   useEffect(() => {
-    const newLang = i18n.language === 'en' ? 'en' : 'zh-CN';
+    const newLang = i18n.language;
     if (newLang !== currentLanguage) {
       setCurrentLanguage(newLang);
     }
@@ -122,6 +122,8 @@ export default function PromptSettings() {
   const loadDefaultContent = async (promptType, promptKey) => {
     if (i18n.language === 'en' && !promptKey.endsWith('_EN')) {
       promptKey += '_EN';
+    } else if (i18n.language === 'tr' && !promptKey.endsWith('_TR')) {
+      promptKey += '_TR';
     }
     try {
       const response = await fetchWithRetry(

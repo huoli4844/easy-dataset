@@ -104,7 +104,7 @@ export default function GaPairsManager({ projectId, fileId, onGaPairsChange }) {
       console.log('Starting GA pairs generation...');
 
       // Get current language from i18n
-      const currentLanguage = i18n.language === 'en' ? 'en' : '中文';
+      const currentLanguage = i18n.language;
 
       const response = await fetch(`/api/projects/${projectId}/files/${fileId}/ga-pairs`, {
         method: 'POST',

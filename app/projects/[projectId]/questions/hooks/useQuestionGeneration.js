@@ -51,7 +51,7 @@ export function useQuestionGeneration(projectId, model, taskSettings, getQuestio
       const processQuestion = async questionId => {
         try {
           console.log('开始生成数据集:', { questionId });
-          const language = i18n.language === 'zh-CN' ? '中文' : 'en';
+          const language = i18n.language;
           // 调用API生成数据集
           const response = await request(`/api/projects/${projectId}/datasets`, {
             method: 'POST',

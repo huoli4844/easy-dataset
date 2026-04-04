@@ -310,7 +310,7 @@ export default function useDatasetDetails(projectId, datasetId) {
     // 异步后台处理，不等待结果
     (async () => {
       try {
-        const language = i18n.language === 'zh-CN' ? '中文' : 'en';
+        const language = i18n.language;
         const response = await fetch(`/api/projects/${projectId}/datasets/optimize`, {
           method: 'POST',
           headers: {

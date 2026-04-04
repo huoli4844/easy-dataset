@@ -47,7 +47,7 @@ export default function useFileProcessing(projectId) {
   const handleFileProcessing = useCallback(
     async (files, pdfStrategy, selectedViosnModel, domainTreeAction) => {
       try {
-        const currentLanguage = i18n.language === 'zh-CN' ? '中文' : 'en';
+        const currentLanguage = i18n.language;
 
         //获取到视觉策略要使用的模型
         const availableModels = JSON.parse(localStorage.getItem('modelConfigList'));

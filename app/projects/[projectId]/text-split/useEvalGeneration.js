@@ -33,7 +33,7 @@ export default function useEvalGeneration(projectId) {
         setGenerating(prev => ({ ...prev, [chunkId]: true }));
 
         // 获取当前语言环境
-        const currentLanguage = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
+        const currentLanguage = i18n.language;
 
         // 调用API生成测评题目
         const response = await request(

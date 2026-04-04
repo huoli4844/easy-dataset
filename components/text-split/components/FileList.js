@@ -414,7 +414,7 @@ export default function FileList({
       const stringFileIds = array.map(id => String(id));
 
       // 获取当前语言环境
-      const currentLanguage = i18n.language === 'en' ? 'en' : '中文';
+      const currentLanguage = i18n.language;
 
       const requestData = {
         fileIds: stringFileIds,
@@ -553,7 +553,7 @@ export default function FileList({
           fileIds: array,
           domainTreeAction,
           model: selectedModelInfo || {},
-          language: i18n.language === 'en' ? 'English' : '中文'
+          language: i18n.language
         })
       });
 
