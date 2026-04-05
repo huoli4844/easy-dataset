@@ -973,7 +973,7 @@ export default function ModelSettings({ projectId }) {
                   name="temperature"
                   value={modelConfigForm.temperature}
                   onChange={handleModelFormChange}
-                  step={0.1}
+                  step={0.01}
                   valueLabelDisplay="auto"
                   aria-label="Temperature"
                   sx={{ flex: 1 }}
@@ -1028,7 +1028,7 @@ export default function ModelSettings({ projectId }) {
                   name="topP"
                   value={modelConfigForm.topP}
                   onChange={handleModelFormChange}
-                  step={0.1}
+                  step={0.01}
                   valueLabelDisplay="auto"
                   aria-label="topP"
                   sx={{ flex: 1 }}
