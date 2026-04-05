@@ -2,16 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Box,
-  Typography,
-  LinearProgress,
-  Paper,
-  IconButton
-} from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Box, Typography, LinearProgress, Paper, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
 // 日志缓冲区大小限制，防止内存溢出

@@ -170,7 +170,8 @@ export default function DistillPage() {
               ? (prev.datasetsBuilt || 0) + progressSnapshot.datasetsBuilt
               : progressSnapshot.datasetsBuilt;
           }
-          if (progressSnapshot.multiTurnDatasetsTotal) next.multiTurnDatasetsTotal = progressSnapshot.multiTurnDatasetsTotal;
+          if (progressSnapshot.multiTurnDatasetsTotal)
+            next.multiTurnDatasetsTotal = progressSnapshot.multiTurnDatasetsTotal;
           if (progressSnapshot.multiTurnDatasetsBuilt != null) {
             next.multiTurnDatasetsBuilt = progressSnapshot._multiTurnIncrement
               ? (prev.multiTurnDatasetsBuilt || 0) + progressSnapshot.multiTurnDatasetsBuilt
@@ -470,7 +471,8 @@ export default function DistillPage() {
             ? (prev.datasetsBuilt || 0) + progressSnapshot.datasetsBuilt
             : progressSnapshot.datasetsBuilt;
         }
-        if (progressSnapshot.multiTurnDatasetsTotal) next.multiTurnDatasetsTotal = progressSnapshot.multiTurnDatasetsTotal;
+        if (progressSnapshot.multiTurnDatasetsTotal)
+          next.multiTurnDatasetsTotal = progressSnapshot.multiTurnDatasetsTotal;
         if (progressSnapshot.multiTurnDatasetsBuilt != null) {
           next.multiTurnDatasetsBuilt = progressSnapshot._multiTurnIncrement
             ? (prev.multiTurnDatasetsBuilt || 0) + progressSnapshot.multiTurnDatasetsBuilt

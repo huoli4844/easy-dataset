@@ -154,7 +154,9 @@ export function DatasetSiteList() {
 
                 {activeCategory !== CATEGORIES.ALL && (
                   <Chip
-                    label={t('datasetSquare.currentFilter', { category: t(`datasetSquare.labels.${activeCategory}`, activeCategory) })}
+                    label={t('datasetSquare.currentFilter', {
+                      category: t(`datasetSquare.labels.${activeCategory}`, activeCategory)
+                    })}
                     size="small"
                     onDelete={() => setActiveCategory(CATEGORIES.ALL)}
                     sx={{ borderRadius: 1.5 }}

@@ -239,7 +239,8 @@ export function DatasetSearchBar() {
                                   <TravelExploreIcon fontSize="small" />
                                 </Avatar>
                                 <Typography>
-                                  {t('datasetSquare.searchVia')} <strong>{getSiteField(site, 'name', i18n.language)}</strong> Search
+                                  {t('datasetSquare.searchVia')}{' '}
+                                  <strong>{getSiteField(site, 'name', i18n.language)}</strong> Search
                                 </Typography>
                               </Box>
                               <Box sx={{ display: 'flex', alignItems: 'center' }}>
