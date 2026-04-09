@@ -31,7 +31,7 @@ export default function ScoreAnchorsForm({
   const [expanded, setExpanded] = useState(false);
 
   // 获取当前语言
-  const currentLanguage = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';
+  const currentLanguage = i18n.language;
 
   // 初始化评分规则（如果为空）
   useEffect(() => {

@@ -40,7 +40,7 @@ export default function useDataCleaning(projectId) {
 
         if (chunkIds.length === 1) {
           const chunkId = chunkIds[0];
-          const currentLanguage = i18n.language === 'zh-CN' ? '中文' : 'en';
+          const currentLanguage = i18n.language;
 
           const response = await request(`/api/projects/${projectId}/chunks/${chunkId}/clean`, {
             method: 'POST',

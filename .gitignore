@@ -20,3 +20,4 @@ prisma/local-db/db.sqlite
 /local-db2
 .trae
 opencode.json
+merge-translations.js
