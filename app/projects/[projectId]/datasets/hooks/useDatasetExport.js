@@ -56,7 +56,11 @@ const useDatasetExport = projectId => {
           fileStream = null;
         }
       } catch (err) {
-        // 用户取消或不支持，使用降级方案
+        if (err?.name === 'AbortError') {
+          return false;
+        }
+
+        // 不支持文件系统 API 时，使用降级方案
         fileStream = null;
       }
 

@@ -1,5 +1,5 @@
 // LocalExportTab.js 组件
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useDeferredValue, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
@@ -26,7 +26,8 @@ import {
   DialogActions,
   Chip,
   Alert,
-  CircularProgress
+  CircularProgress,
+  Pagination
 } from '@mui/material';
 
 const LocalExportTab = ({
@@ -64,11 +65,16 @@ const LocalExportTab = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [totalCount, setTotalCount] = useState(0);
+  const [quickSetCount, setQuickSetCount] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const PAGE_SIZE = 100;
 
   // Get label statistics (changed to GET + query parameters)
   const fetchTagStats = async () => {
     try {
       setLoading(true);
+      setError('');
       const url = `/api/projects/${projectId}/datasets/export?confirmed=${confirmedOnly ? 'true' : 'false'}`;
       const response = await fetch(url, { method: 'GET' });
 
@@ -87,6 +93,7 @@ const LocalExportTab = ({
       }));
 
       setBalanceConfig(initialConfig);
+      setCurrentPage(1);
 
       // 计算总数
       const total = initialConfig.reduce((sum, config) => sum + config.maxCount, 0);
@@ -105,33 +112,76 @@ const LocalExportTab = ({
   };
 
   // 更新单个标签的数量配置
-  const updateBalanceConfig = (tagLabel, newCount) => {
-    const newConfig = balanceConfig.map(config => {
-      if (config.tagLabel === tagLabel) {
-        const count = Math.min(Math.max(0, parseInt(newCount) || 0), config.availableCount);
-        return { ...config, maxCount: count };
-      }
-      return config;
+  const updateBalanceConfig = useCallback((tagLabel, newCount) => {
+    setBalanceConfig(prevConfig => {
+      let nextTotalCount = 0;
+      const nextConfig = prevConfig.map(config => {
+        if (config.tagLabel === tagLabel) {
+          const count = Math.min(Math.max(0, parseInt(newCount, 10) || 0), config.availableCount);
+          const updatedConfig = { ...config, maxCount: count };
+          nextTotalCount += updatedConfig.maxCount;
+          return updatedConfig;
+        }
+
+        nextTotalCount += config.maxCount;
+        return config;
+      });
+
+      setTotalCount(nextTotalCount);
+      return nextConfig;
     });
-
-    setBalanceConfig(newConfig);
-
-    // 重新计算总数
-    const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
-    setTotalCount(total);
-  };
+  }, []);
 
   // 一键设置所有标签为相同数量
-  const setAllToSameCount = count => {
-    const newConfig = balanceConfig.map(config => ({
-      ...config,
-      maxCount: Math.min(Math.max(0, parseInt(count) || 0), config.availableCount)
-    }));
+  const setAllToSameCount = useCallback(count => {
+    const parsedCount = parseInt(count, 10) || 0;
 
-    setBalanceConfig(newConfig);
+    setBalanceConfig(prevConfig => {
+      let nextTotalCount = 0;
+      const nextConfig = prevConfig.map(config => {
+        const maxCount = Math.min(Math.max(0, parsedCount), config.availableCount);
+        nextTotalCount += maxCount;
+        return {
+          ...config,
+          maxCount
+        };
+      });
 
-    const total = newConfig.reduce((sum, config) => sum + config.maxCount, 0);
-    setTotalCount(total);
+      setTotalCount(nextTotalCount);
+      return nextConfig;
+    });
+  }, []);
+
+  const deferredBalanceConfig = useDeferredValue(balanceConfig);
+  const totalPages = useMemo(() => Math.max(1, Math.ceil(deferredBalanceConfig.length / PAGE_SIZE)), [deferredBalanceConfig]);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
+
+  const paginatedBalanceConfig = useMemo(() => {
+    const startIndex = (currentPage - 1) * PAGE_SIZE;
+    return deferredBalanceConfig.slice(startIndex, startIndex + PAGE_SIZE);
+  }, [currentPage, deferredBalanceConfig]);
+
+  const handleQuickSetInputChange = event => {
+    setQuickSetCount(event.target.value);
+  };
+
+  const applyQuickSetCount = () => {
+    setAllToSameCount(quickSetCount);
+  };
+
+  const handleQuickSetKeyDown = event => {
+    if (event.key === 'Enter') {
+      applyQuickSetCount();
+    }
+  };
+
+  const handlePageChange = (_event, page) => {
+    setCurrentPage(page);
   };
 
   // 处理平衡导出
@@ -697,15 +747,15 @@ const LocalExportTab = ({
                   <TextField
                     size="small"
                     type="number"
+                    value={quickSetCount}
                     placeholder={t('exportDialog.customAmount')}
                     sx={{ width: 120 }}
-                    onKeyPress={e => {
-                      if (e.key === 'Enter') {
-                        setAllToSameCount(e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
+                    onChange={handleQuickSetInputChange}
+                    onKeyDown={handleQuickSetKeyDown}
                   />
+                  <Button size="small" variant="outlined" onClick={applyQuickSetCount}>
+                    {t('common.apply', '应用')}
+                  </Button>
                 </Box>
               </Box>
 
@@ -721,7 +771,7 @@ const LocalExportTab = ({
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {balanceConfig.map(config => (
+                    {paginatedBalanceConfig.map(config => (
                       <TableRow key={config.tagLabel}>
                         <TableCell>
                           <Chip label={config.tagLabel} size="small" variant="outlined" />
@@ -749,6 +799,20 @@ const LocalExportTab = ({
                   </TableBody>
                 </Table>
               </TableContainer>
+
+              {totalPages > 1 && (
+                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
+                  <Pagination
+                    color="primary"
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    size="small"
+                    showFirstButton
+                    showLastButton
+                  />
+                </Box>
+              )}
 
               {/* 统计信息 */}
               <Box sx={{ mt: 2, p: 2, bgcolor: 'primary.50', borderRadius: 1 }}>
