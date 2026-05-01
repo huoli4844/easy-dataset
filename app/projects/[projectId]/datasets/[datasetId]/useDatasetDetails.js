@@ -178,8 +178,7 @@ export default function useDatasetDetails(projectId, datasetId) {
     }
   };
 
-  // 导航到其他数据集
-  const handleNavigate = async direction => {
+  const buildNavigationParams = direction => {
     const params = new URLSearchParams({ operateType: direction });
 
     // Apply active list filters so navigation stays within the filtered set
@@ -218,6 +217,12 @@ export default function useDatasetDetails(projectId, datasetId) {
       console.error('Failed to read filter conditions for navigation:', e);
     }
 
+    return params;
+  };
+
+  // 导航到其他数据集
+  const handleNavigate = async direction => {
+    const params = buildNavigationParams(direction);
     const response = await axios.get(`/api/projects/${projectId}/datasets/${datasetId}?${params}`);
     if (response.data) {
       router.push(`/projects/${projectId}/datasets/${response.data.id}`);
@@ -271,7 +276,8 @@ export default function useDatasetDetails(projectId, datasetId) {
 
     try {
       // 尝试获取下一个数据集，在删除前先确保有可导航的目标
-      const nextResponse = await axios.get(`/api/projects/${projectId}/datasets/${datasetId}?operateType=next`);
+      const params = buildNavigationParams('next');
+      const nextResponse = await axios.get(`/api/projects/${projectId}/datasets/${datasetId}?${params}`);
       const hasNextDataset = !!nextResponse.data;
       const nextDatasetId = hasNextDataset ? nextResponse.data.id : null;
 
